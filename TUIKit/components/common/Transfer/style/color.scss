@@ -1,0 +1,68 @@
+.main {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 -4px 12px 0 rgba(0, 0, 0, 0.06);
+
+  .left {
+    border-right: 1px solid #e8e8e9;
+  }
+
+  .transfer-header {
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: 0;
+
+    input {
+      background: #ffffff;
+      border: 1px solid #dee0e3;
+      font-weight: 500;
+      color: #8f959e;
+      letter-spacing: 0;
+    }
+  }
+
+  .transfer-list {
+    .transfer-text {
+      font-weight: 500;
+      color: #8f959e;
+      letter-spacing: 0;
+    }
+
+    &-item {
+      .disabled {
+        background: #eeeeee;
+      }
+    }
+  }
+}
+
+.btn {
+  background: #3370ff;
+  border: 0 solid #2f80ed;
+  font-weight: 400;
+  color: #ffffff;
+
+  &-cancel {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    color: #828282;
+  }
+}
+
+.btn-no {
+  background: #3370ff;
+  border: 1px solid #2f80ed;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.transfer-h5-header {
+  background: #ffffff;
+
+  .title {
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: 0;
+  }
+}
