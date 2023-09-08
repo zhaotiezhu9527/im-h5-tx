@@ -8,90 +8,57 @@
       fixed
       bgColor="#ffffff"
       leftIconSize="0"
-      border
       safe-area-inset-top
       height="100rpx"
-      titleStyle="color:#000;font-weight:600;font-size:32rpx;"
+      titleStyle="color:#000;font-size:28rpx;"
     >
     </u-navbar>
     <view class="page">
       <view class="wrap">
-        <view class="logo">
-          <!-- <image class="img" mode="widthFix" src="../static/img/login_logo.png" /> -->
-        </view>
         <view class="from">
-          <u-form ref="uForm" labelPosition="left" labelWidth="180">
-            <u-form-item label="账号">
-              <u-input
-                type="text"
-                placeholder="请输入账号"
-                clearable
-                border="none"
-                v-model="userPhone"
-              ></u-input>
-            </u-form-item>
-            <u-form-item label="密码">
-              <u-input
-                placeholder="请输入密码"
-                clearable
-                border="none"
-                v-show="passicon1"
-                v-model="password"
-              >
-                <view slot="suffix" @click="pwdChange">
-                  <u-icon name="eye" color="#000" size="46rpx"></u-icon>
-                </view>
-              </u-input>
-              <u-input
-                type="password"
-                placeholder="请输入密码"
-                clearable
-                v-show="!passicon1"
-                border="none"
-                v-model="password"
-              >
-                <view slot="suffix" @click="pwdChange">
-                  <u-icon name="eye-off" color="#000" size="46rpx"></u-icon>
-                </view>
-              </u-input>
-            </u-form-item>
-            <u-form-item label="确认密码">
-              <u-input
-                placeholder="请输入确认密码"
-                clearable
-                border="none"
-                v-show="passicon2"
-                v-model="newPassword"
-              >
-                <view slot="suffix" @click="pwdChange2">
-                  <u-icon name="eye" color="#000" size="46rpx"></u-icon>
-                </view>
-              </u-input>
-              <u-input
-                type="password"
-                placeholder="请输入确认密码"
-                clearable
-                v-show="!passicon2"
-                border="none"
-                v-model="newPassword"
-              >
-                <view slot="suffix" @click="pwdChange2">
-                  <u-icon name="eye-off" color="#000" size="46rpx"></u-icon>
-                </view>
-              </u-input>
-            </u-form-item>
-          </u-form>
-          <view class="btns">
-            <u-button
-              class="custom-style"
-              color="#007aff"
-              block
-              @click="submit"
-              :loading="loading"
-            >
-              注册
-            </u-button>
-          </view>
+          <u-input
+            type="text"
+            placeholder="请输入账号"
+            clearable
+            border="none"
+            v-model="userPhone"
+          ></u-input>
+          <view class="u-border-bottom"></view>
+          <u-input
+            placeholder="请输入密码"
+            clearable
+            password
+            border="none"
+            v-model="password"
+          ></u-input>
+          <view class="u-border-bottom"></view>
+          <u-input
+            placeholder="请输入确认密码"
+            clearable
+            password
+            border="none"
+            v-model="newPassword"
+          ></u-input>
+        </view>
+        <view class="btns">
+          <u-button
+            class="custom-style"
+            color="#007aff"
+            block
+            @click="submit"
+            :loading="loading"
+          >
+            注册
+          </u-button>
+          <u-button
+            class="custom-style"
+            color="#ffffff"
+            block
+            @click="register"
+            style="color: #a7a6a7"
+          >
+            已有账号，去登录
+          </u-button>
         </view>
       </view>
     </view>
@@ -101,8 +68,6 @@
 export default {
   data() {
     return {
-      passicon1: false,
-      passicon2: false,
       password: "",
       newPassword: "",
       userPhone: "",
@@ -110,12 +75,6 @@ export default {
     };
   },
   methods: {
-    pwdChange() {
-      this.passicon1 = !this.passicon1;
-    },
-    pwdChange2() {
-      this.passicon2 = !this.passicon2;
-    },
     submit() {
       if (!this.userPhone) {
         return this.$base.show("请输入账号");
@@ -150,31 +109,31 @@ export default {
           this.loading = false;
         });
     },
+    register() {
+      uni.navigateTo({
+        url: "/pages/login",
+      });
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
-view,
-text {
-  font-size: 32rpx;
+/deep/.uni-input-input {
+  padding: 18rpx 0 !important;
+  font-size: 28rpx;
 }
-.logo {
-  display: flex;
-  justify-content: center;
-  padding-top: 60rpx;
-  .img {
-    width: 50%;
-  }
+/deep/.u-input__content__field-wrapper__field {
+  height: auto;
 }
 .btns {
   text-align: center;
-  padding: 40rpx 0;
+  padding: 0 30rpx;
   .custom-style {
     border-radius: 10rpx;
     margin-bottom: 20rpx;
-    font-size: 32rpx;
-    height: 88rpx;
+    font-size: 28rpx;
+    height: 70rpx;
   }
   .register {
     color: #007aff;
@@ -183,9 +142,12 @@ text {
   }
 }
 .from {
-  padding: 40rpx;
-  width: 100%;
+  margin: 40rpx 30rpx;
+  width: calc(100% - 60rpx);
+  border-radius: 10rpx;
+  padding: 0 20rpx;
   box-sizing: border-box;
+  background-color: #fff;
   .image {
     height: 60rpx;
   }
