@@ -4,10 +4,10 @@
       placeholder
       :border="false"
       autoBack
-      title="登录"
+      title="修改密码"
       fixed
       bgColor="#ffffff"
-      leftIconSize="0"
+      leftIconSize="30rpx"
       safe-area-inset-top
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
@@ -18,18 +18,27 @@
         <view class="from">
           <u-input
             type="text"
-            placeholder="请输入账号"
+            placeholder="请输入原密码"
             clearable
+            password
             border="none"
             v-model="userPhone"
           ></u-input>
           <view class="u-border-bottom"></view>
           <u-input
-            placeholder="请输入密码"
+            placeholder="请输入新密码"
             clearable
             password
             border="none"
             v-model="password"
+          ></u-input>
+          <view class="u-border-bottom"></view>
+          <u-input
+            placeholder="请输入确认密码"
+            clearable
+            password
+            border="none"
+            v-model="newPassword"
           ></u-input>
         </view>
         <view class="btns">
@@ -37,19 +46,10 @@
             class="custom-style"
             color="#007aff"
             block
-            @click="login"
+            @click="submit"
             :loading="loading"
           >
-            登录
-          </u-button>
-          <u-button
-            class="custom-style"
-            color="#ffffff"
-            block
-            @click="register"
-            style="color: #a7a6a7"
-          >
-            去注册
+            确认修改
           </u-button>
         </view>
       </view>
@@ -61,21 +61,19 @@ export default {
   data() {
     return {
       password: "",
+      newPassword: "",
       userPhone: "",
       loading: false,
     };
   },
   methods: {
-    register() {
-      uni.navigateTo({
-        url: "/pages/register",
-      });
-    },
-    login() {
+    submit() {
       if (!this.userPhone) {
         return this.$base.show("请输入账号");
       } else if (!this.password) {
         return this.$base.show("请输入密码");
+      } else if (this.password !== this.newPassword) {
+        return this.$base.show("密码不一致");
       }
       const DATA_OBJ = {
         loginPwd: this.password,
@@ -83,25 +81,18 @@ export default {
       };
       this.loading = true;
       this.$api
-        .user_login(DATA_OBJ)
+        .user_register(DATA_OBJ)
         .then((res) => {
           if (res.data.code == 0) {
             uni.setStorage({
               key: "token",
               data: res.data.token,
-              success: () => {
+              success: function () {
                 // uni.setStorageSync('userID','')
                 // uni.setStorageSync('SDKAppID','')
                 // uni.setStorageSync('secretKey','')
                 this.$base.configFn();
-                // #ifdef H5
                 uni.switchTab({ url: "/" });
-                // #endif
-                // #ifdef APP-PLUS
-                uni.switchTab({
-                  url: "/TUIKit/components/TUIConversation/index",
-                });
-                // #endif
               },
             });
           }
@@ -109,6 +100,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    register() {
+      uni.navigateTo({
+        url: "/pages/login",
+      });
     },
   },
 };

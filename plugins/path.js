@@ -1,13 +1,36 @@
 const home = [
   {
     path: "/TUIKit/components/TUIConversation/index",
+    // #ifdef H5
     aliasPath: "/",
+    // #endif
   },
   {
     path: "/pages/login",
+    // #ifdef APP-PLUS
+    aliasPath: "/",
+    // #endif
   },
   {
     path: "/pages/register",
+  },
+  {
+    path: "/pages/user",
+  },
+  {
+    path: "/pages/name",
+  },
+  {
+    path: "/pages/sex",
+  },
+  {
+    path: "/pages/pwd",
+  },
+  {
+    path: "/pages/ewm",
+  },
+  {
+    path: "/pages/avatar",
   },
   {
     path: "/TUIKit/components/TUIChat/index",

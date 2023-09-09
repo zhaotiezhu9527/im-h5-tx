@@ -1,7 +1,7 @@
 <template>
   <div class="TUIChat" :class="[!isPC ? 'TUIChat-H5' : '']">
     <div class="TUIChat-main">
-      <div class="TUIChat-safe-tips">
+      <!-- <div class="TUIChat-safe-tips">
         <span>
           {{
             TUITranslateService.t(
@@ -12,7 +12,7 @@
         <a @click="openComplaintLink(Link.complaint)">{{
           TUITranslateService.t("TUIChat.点此投诉")
         }}</a>
-      </div>
+      </div> -->
       <div
         class="TUIChat-application-tips"
         v-if="isGroup && groupApplicationCount > 0"

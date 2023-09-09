@@ -1,11 +1,38 @@
 {
+  "easycom": {
+    "^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue"
+  },
   "pages": [
+    // #ifdef APP-PLUS
+    {
+      "path": "pages/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
     {
       "path": "TUIKit/components/TUIConversation/index",
       "style": {
         "navigationBarTitleText": "云通信 IM"
       }
     },
+    // #endif
+
+    // #ifdef H5
+    {
+      "path": "TUIKit/components/TUIConversation/index",
+      "style": {
+        "navigationBarTitleText": "云通信 IM"
+      }
+    },
+    {
+      "path": "pages/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    // #endif
+
     {
       "path": "TUIKit/components/TUIChat/index",
       "style": {
@@ -28,27 +55,71 @@
       }
     },
     {
-      "path": "pages/login",
-      "style": {
-        "navigationBarTitleText": "登录"
-      }
-    },
-    {
       "path": "pages/register",
       "style": {
         "navigationBarTitleText": "注册"
       }
+    },
+    {
+      "path": "pages/user",
+      "style": {
+        "navigationBarTitleText": "我"
+      }
+    },
+    {
+      "path": "pages/name",
+      "style": {
+        "navigationBarTitleText": "昵称"
+      }
+    },
+    {
+      "path": "pages/sex",
+      "style": {
+        "navigationBarTitleText": "性别"
+      }
+    },
+    {
+      "path": "pages/pwd",
+      "style": {
+        "navigationBarTitleText": "修改密码"
+      }
+    },
+    {
+      "path": "pages/ewm",
+      "style": {
+        "navigationBarTitleText": "我的二维码"
+      }
+    },
+    {
+      "path": "pages/avatar",
+      "style": {
+        "navigationBarTitleText": "头像"
+      }
     }
   ],
   "tabBar": {
+    "color": "#c4c8d2",
+    "selectedColor": "#59be68",
+    "borderStyle": "white",
+    "iconWidth": "18px",
     "list": [
       {
         "pagePath": "TUIKit/components/TUIConversation/index",
+        "selectedIconPath": "static/icon_0.png",
+        "iconPath": "static/icon_01.png",
         "text": "消息"
       },
       {
         "pagePath": "TUIKit/components/TUIContact/index",
+        "selectedIconPath": "static/icon_1.png",
+        "iconPath": "static/icon_11.png",
         "text": "通讯录"
+      },
+      {
+        "pagePath": "pages/user",
+        "text": "我",
+        "selectedIconPath": "static/icon_2.png",
+        "iconPath": "static/icon_22.png"
       }
     ]
   },
