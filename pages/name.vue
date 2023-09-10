@@ -12,6 +12,9 @@
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
     >
+      <template #right>
+        <view class="config">完成</view>
+      </template>
     </u-navbar>
     <view class="page">
       <view class="wrap">
@@ -56,5 +59,8 @@ export default {
   padding: 0 20rpx;
   box-sizing: border-box;
   background-color: #fff;
+}
+.config {
+  color: #59be68;
 }
 </style>

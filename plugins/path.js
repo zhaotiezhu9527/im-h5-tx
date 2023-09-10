@@ -1,6 +1,6 @@
 const home = [
   {
-    path: "/TUIKit/components/TUIConversation/index",
+    path: "/pages/message",
     // #ifdef H5
     aliasPath: "/",
     // #endif
@@ -33,6 +33,27 @@ const home = [
     path: "/pages/avatar",
   },
   {
+    path: "/pages/friend",
+  },
+  {
+    path: "/pages/info",
+  },
+  {
+    path: "/pages/search",
+  },
+  {
+    path: "/pages/blacklist",
+  },
+  {
+    path: "/pages/verify",
+  },
+  {
+    path: "/pages/add",
+  },
+  {
+    path: "/pages/message",
+  },
+  {
     path: "/TUIKit/components/TUIChat/index",
   },
   {
@@ -40,6 +61,9 @@ const home = [
   },
   {
     path: "/TUIKit/components/TUIContact/index",
+  },
+  {
+    path: "/TUIKit/components/TUIConversation/index",
   },
   {
     path: "/TUIKit/components/TUIGroup/manage-group/index",

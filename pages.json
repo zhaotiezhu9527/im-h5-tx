@@ -10,21 +10,33 @@
         "navigationBarTitleText": "登录"
       }
     },
+    // {
+    //   "path": "TUIKit/components/TUIConversation/index",
+    //   "style": {
+    //     "navigationBarTitleText": "云通信 IM"
+    //   }
+    // },
     {
-      "path": "TUIKit/components/TUIConversation/index",
+      "path": "pages/message",
       "style": {
-        "navigationBarTitleText": "云通信 IM"
+        "navigationBarTitleText": "消息"
       }
-    },
+    }
     // #endif
 
     // #ifdef H5
     {
-      "path": "TUIKit/components/TUIConversation/index",
+      "path": "pages/message",
       "style": {
-        "navigationBarTitleText": "云通信 IM"
+        "navigationBarTitleText": "消息"
       }
     },
+    // {
+    //   "path": "TUIKit/components/TUIConversation/index",
+    //   "style": {
+    //     "navigationBarTitleText": "云通信 IM"
+    //   }
+    // },
     {
       "path": "pages/login",
       "style": {
@@ -44,6 +56,12 @@
     },
     {
       "path": "TUIKit/components/TUIContact/index",
+      "style": {
+        "navigationBarTitleText": "云通信 IM"
+      }
+    },
+    {
+      "path": "TUIKit/components/TUIConversation/index",
       "style": {
         "navigationBarTitleText": "云通信 IM"
       }
@@ -95,6 +113,42 @@
       "style": {
         "navigationBarTitleText": "头像"
       }
+    },
+    {
+      "path": "pages/friend",
+      "style": {
+        "navigationBarTitleText": "通讯录"
+      }
+    },
+    {
+      "path": "pages/info",
+      "style": {
+        "navigationBarTitleText": "信息"
+      }
+    },
+    {
+      "path": "pages/search",
+      "style": {
+        "navigationBarTitleText": "搜索"
+      }
+    },
+    {
+      "path": "pages/blacklist",
+      "style": {
+        "navigationBarTitleText": "黑名单"
+      }
+    },
+    {
+      "path": "pages/verify",
+      "style": {
+        "navigationBarTitleText": "验证信息"
+      }
+    },
+    {
+      "path": "pages/add",
+      "style": {
+        "navigationBarTitleText": "添加好友"
+      }
     }
   ],
   "tabBar": {
@@ -104,13 +158,13 @@
     "iconWidth": "18px",
     "list": [
       {
-        "pagePath": "TUIKit/components/TUIConversation/index",
+        "pagePath": "pages/message",
         "selectedIconPath": "static/icon_0.png",
         "iconPath": "static/icon_01.png",
         "text": "消息"
       },
       {
-        "pagePath": "TUIKit/components/TUIContact/index",
+        "pagePath": "pages/friend",
         "selectedIconPath": "static/icon_1.png",
         "iconPath": "static/icon_11.png",
         "text": "通讯录"

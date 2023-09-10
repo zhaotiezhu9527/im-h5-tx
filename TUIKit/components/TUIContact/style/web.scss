@@ -20,7 +20,6 @@
       justify-content: center;
       display: flex;
       align-items: center;
-      padding: 4px 0;
 
       input {
         flex: 1;
@@ -334,18 +333,13 @@ input {
 .search {
   flex: 1;
   display: flex;
-  padding: 12px;
+  padding: 28rpx;
   justify-content: center;
 
   &-box {
     flex: 1;
     display: flex;
     align-items: center;
-
-    h1 {
-      padding: 2px 8px;
-      font-size: 14px;
-    }
 
     .input-box {
       display: flex;
