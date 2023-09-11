@@ -28,14 +28,21 @@
       </view>
       <view class="main">
         <u-cell-group>
-          <u-cell>
+          <u-cell v-for="(item, index) in list" :key="index">
             <template #title>
               <view
                 class="flex items-start justify-between item"
-                @click="itemChange"
+                @click="itemChange(item)"
               >
                 <view class="flex items-center">
                   <view class="icon">
+                    <u-badge
+                      class="badge"
+                      color="#ffffff"
+                      max="99"
+                      v-if="item.unreadCount"
+                      :value="item.unreadCount"
+                    ></u-badge>
                     <u--image
                       width="70rpx"
                       height="70rpx"
@@ -45,11 +52,17 @@
                     ></u--image>
                   </view>
                   <view>
-                    <text class="span">在线客服1号</text>
-                    <view class="txt">123</view>
+                    <text class="span">
+                      {{ item.lastMessage.fromAccount }}
+                    </text>
+                    <view class="txt">
+                      {{ item.lastMessage.messageForShow }}
+                    </view>
                   </view>
                 </view>
-                <view class="time">2022-23-23</view>
+                <view class="time">
+                  {{ $u.timeFrom(item.lastMessage.lastTime, "yyyy年mm月dd日") }}
+                </view>
               </view>
             </template>
           </u-cell>
@@ -76,13 +89,15 @@ export default {
     Tooltip,
   },
   data() {
-    return {};
+    return {
+      list: [],
+    };
   },
   onShow() {
     TUIStore.watch(StoreName.CONV, {
-      conversationList: (list) => {
-        console.log(list);
-        // conversationList.value = list;
+      conversationList: (data) => {
+        this.list = data;
+        console.log(this.list);
       },
     });
   },
@@ -90,9 +105,15 @@ export default {
     this.$refs.tooltipRef.showFn();
   },
   methods: {
+    // 进入回话
     itemChange(item) {
+      TUIConversationService.switchConversation(item.conversationID).catch(
+        () => {
+          this.$base.show("进入回话失败");
+        }
+      );
       uni.navigateTo({
-        url: "/pages/info",
+        url: "/TUIKit/components/TUIChat/index",
       });
     },
     routePath(url) {
@@ -158,6 +179,13 @@ export default {
     justify-content: center;
     align-items: center;
     border-radius: 6rpx;
+    position: relative;
+    .badge {
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 10;
+    }
     &.yellow {
       background-color: #ed9f50;
     }
