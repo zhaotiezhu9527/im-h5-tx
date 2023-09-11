@@ -16,26 +16,44 @@
     <view class="page">
       <view class="mask">
         <view class="flex items-center">
-          <u-avatar :src="src" size="90"></u-avatar>
+          <u-avatar :src="items.avatar" size="90"></u-avatar>
           <view class="pl-12">
-            <view class="text"> test01 </view>
+            <view class="text"> {{ items.nick }} </view>
           </view>
         </view>
-        <view class="ewm"></view>
+        <view class="ewm">
+          <uqrcode
+            ref="uqrcode"
+            canvas-id="qrcode"
+            :value="path"
+            size="125"
+          ></uqrcode>
+        </view>
         <view class="text">扫一扫上面的二维码图案添加为好友</view>
       </view>
     </view>
   </view>
 </template>
 <script>
+import { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
-      src: "https://cdn.uviewui.com/uview/album/1.jpg",
-      text: "test01",
+      items: {},
+      path: "",
     };
   },
-  onLoad() {},
+  onShow() {
+    // 获取信息
+    TUIUserService.getUserProfile()
+      .then(({ data }) => {
+        this.items = data;
+        this.path = `/pages/info?id=${this.items.userID}`;
+      })
+      .catch(function (imError) {
+        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+      });
+  },
   methods: {},
 };
 </script>

@@ -5,11 +5,14 @@
     </view>
     <u-transition :show="show" mode="fade">
       <view class="mask" @click.native.stop="show = true">
-        <view class="flex py-6" @click="change('you')">
+        <view class="flex py-6" @click.native.stop="change('you')">
           <u-icon size="40" name="man-add" color="#ffffff"></u-icon>
           <text class="pl-4">添加好友</text>
         </view>
-        <view class="flex py-6 u-border-top" @click="change('scan')">
+        <view
+          class="flex py-6 u-border-top"
+          @click.native.stop="change('scan')"
+        >
           <u-icon size="40" name="scan" color="#ffffff"></u-icon>
           <view class="pl-4">扫一扫</view>
         </view>
@@ -29,11 +32,11 @@ export default {
       this.show = false;
     },
     change(type) {
+      this.show = false;
       if (type === "scan") {
         uni.scanCode({
           success: (res) => {
             console.log(res);
-            this.msg = res.result;
           },
         });
       } else {

@@ -63,17 +63,22 @@
           </u-cell>
           <u-cell>
             <template #title>
-              <view class="flex items-center item" @click="itemChange">
+              <view
+                class="flex items-center item"
+                @click="itemChange(item)"
+                v-for="(item, index) in list"
+                :key="index"
+              >
                 <view class="icon">
                   <u--image
                     width="70rpx"
                     height="70rpx"
                     radius="50%"
                     :showLoading="true"
-                    src="https://cdn.uviewui.com/uview/album/8.jpg"
+                    :src="item.profile.avatar"
                   ></u--image>
                 </view>
-                <text class="span">在线客服1号</text>
+                <text class="span">{{ item.profile.nick }}</text>
               </view>
             </template>
           </u-cell>
@@ -101,21 +106,14 @@ export default {
   },
   data() {
     return {
-      indexList: ["A", "B", "C"],
-      itemArr: [
-        ["列表A1", "列表A2", "列表A3"],
-        ["列表A1", "列表A2", "列表A3"],
-        ["列表B1", "列表B2", "列表B3"],
-        ["列表C1", "列表C2", "列表C3"],
-      ],
+      list: [],
     };
   },
   onShow() {
     // 获取好友列表
     TUIFriendService.getFriendList()
       .then((res) => {
-        console.log("getFriendList:", res.data);
-        // myFriendList.value = friendProfileList(res.data);
+        this.list = res.data;
       })
       .catch((err) => {
         console.warn("getFriendList error:", err);
@@ -127,7 +125,7 @@ export default {
   methods: {
     itemChange(item) {
       uni.navigateTo({
-        url: "/pages/info",
+        url: `/pages/info?id=${item.userID}`,
       });
     },
     routePath(url) {

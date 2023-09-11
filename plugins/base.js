@@ -1,5 +1,4 @@
-import { TUIChatKit, genTestUserSig } from "../TUIKit";
-import { vueVersion } from "../TUIKit/adapter-vue";
+import { TUIChatKit } from "../TUIKit";
 import { TUILogin } from "@tencentcloud/tui-core";
 //获取用户信息
 //设置缓存内容
@@ -103,28 +102,14 @@ export const request = (params) => {
 };
 
 export const configFn = (params) => {
-  // 必填信息
-  const config = {
-    userID: "test01", //User ID
-    SDKAppID: 1600002539, // Your SDKAppID
-    secretKey:
-      "e05fb6e437025f12385953543c200b3ec90502e6286fdf69eb40a12d0269bdec", // Your secretKey
-  };
-  const userSig = genTestUserSig(config).userSig;
-  uni.$chat_SDKAppID = config.SDKAppID;
-  uni.$chat_userID = config.userID;
-  uni.$chat_userSig = userSig;
-
   // TUIChatKit 初始化
   TUIChatKit.init();
-
   // TUICore login
   TUILogin.login({
-    SDKAppID: uni.$chat_SDKAppID,
-    userID: uni.$chat_userID,
-    userSig: uni.$chat_userSig,
+    userID: params.userID,
+    SDKAppID: 1600002539, // Your SDKAppID
+    userSig: params.userSig,
     useUploadPlugin: true,
     useProfanityFilterPlugin: false,
-    framework: `vue${vueVersion}`,
   });
 };

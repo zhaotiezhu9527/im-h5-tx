@@ -4,7 +4,10 @@ export default {
     uni.getStorage({
       key: "token",
       success: (res) => {
-        this.$base.configFn();
+        this.$base.configFn({
+          userID: uni.getStorageSync("userID"),
+          userSig: uni.getStorageSync("userSig"),
+        });
       },
     });
   },

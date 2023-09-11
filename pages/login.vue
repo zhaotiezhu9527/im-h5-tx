@@ -90,16 +90,18 @@ export default {
               key: "token",
               data: res.data.token,
               success: () => {
-                // uni.setStorageSync('userID','')
-                // uni.setStorageSync('SDKAppID','')
-                // uni.setStorageSync('secretKey','')
-                this.$base.configFn();
+                uni.setStorageSync("userID", this.userPhone);
+                uni.setStorageSync("userSig", res.data.usersig);
+                this.$base.configFn({
+                  userID: this.userPhone,
+                  userSig: res.data.usersig,
+                });
                 // #ifdef H5
                 uni.switchTab({ url: "/" });
                 // #endif
                 // #ifdef APP-PLUS
                 uni.switchTab({
-                  url: "/TUIKit/components/TUIConversation/index",
+                  url: "/pages/message",
                 });
                 // #endif
               },

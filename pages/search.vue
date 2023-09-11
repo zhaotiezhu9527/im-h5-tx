@@ -24,30 +24,37 @@
           placeholder="搜索"
           actionText="取消"
           height="60rpx"
+          @search="search"
           @custom="clear"
         ></u-search>
       </view>
-      <view class="main">
+      <view class="main" v-if="list.length">
         <view class="title u-border-bottom">好友</view>
         <u-cell-group>
           <u-cell>
             <template #title>
-              <view class="flex items-center item">
+              <view
+                class="flex items-center item"
+                v-for="(item, index) in list"
+                @click="itemChange(item)"
+                :key="index"
+              >
                 <view class="icon">
                   <u--image
                     width="70rpx"
                     height="70rpx"
                     radius="8rpx"
                     :showLoading="true"
-                    src="https://cdn.uviewui.com/uview/album/8.jpg"
+                    :src="item.profile.avatar"
                   ></u--image>
                 </view>
-                <text class="span">在线客服1号</text>
+                <view class="span" v-html="titleFn(item.profile.nick)"> </view>
               </view>
             </template>
           </u-cell>
         </u-cell-group>
       </view>
+      <u-empty class="pt-40" v-else mode="data"> </u-empty>
     </view>
   </view>
 </template>
@@ -67,11 +74,41 @@ export default {
   data() {
     return {
       keyword: "",
+      list: [], // 筛选后的数据
+      listAll: [], // 好友集合
     };
   },
-  onShow() {},
+  onShow() {
+    // 获取好友列表
+    TUIFriendService.getFriendList()
+      .then((res) => {
+        this.listAll = res.data;
+      })
+      .catch((err) => {
+        console.warn("getFriendList error:", err);
+      });
+  },
   methods: {
+    itemChange(item) {
+      uni.navigateTo({
+        url: `/pages/info?id=${item.userID}`,
+      });
+    },
+    titleFn(e) {
+      let title = e.replace(
+        this.keyword,
+        `<text class='green-c'>${this.keyword}</text>`
+      );
+      return title;
+    },
+    search(e) {
+      let all = JSON.parse(JSON.stringify(this.listAll));
+      this.list = all.filter((item) => item.profile.nick.includes(e));
+    },
     clear() {
+      this.list = [];
+      this.listAll = [];
+      this.keyword = "";
       uni.navigateBack({
         delta: 1,
       });
@@ -125,13 +162,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 6rpx;
-    &.yellow {
-      background-color: #ed9f50;
-    }
-    &.block {
-      background-color: #000;
-    }
+    border-radius: 50%;
   }
   .span {
     padding-left: 10rpx;

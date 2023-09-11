@@ -15,10 +15,10 @@
     </u-navbar>
     <view class="flex p-14 justify-between back">
       <view class="flex items-center">
-        <u-avatar :src="src" size="90"></u-avatar>
+        <u-avatar :src="items.avatar" size="90"></u-avatar>
         <view class="pl-12">
-          <view class="text"> test01 </view>
-          <view class="con"> 账号：123abc </view>
+          <view class="text"> {{ items.nick }} </view>
+          <view class="con"> 账号：{{ items.userID }} </view>
         </view>
       </view>
     </view>
@@ -53,18 +53,46 @@
         </u-cell>
       </u-cell-group>
     </view>
-    <view class="row blue back"> 聊天 </view>
-    <view class="row back" @click="delChange"> 删除 </view>
+    <view class="row blue back" @click="service"> 聊天 </view>
+    <view class="row back" @click="show = true"> 删除 </view>
+    <u-modal
+      :show="show"
+      @cancel="show = false"
+      @confirm="confirm"
+      ref="uModal"
+      title="删除"
+      showCancelButton
+    >
+      <view>确定删除该好友吗？</view>
+    </u-modal>
   </view>
 </template>
 <script>
+import TencentCloudChat from "@tencentcloud/chat";
+import {
+  TUIUserService,
+  TUIFriendService,
+  TUIConversationService,
+} from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
-      src: "https://cdn.uviewui.com/uview/album/1.jpg",
-      text: "test01",
+      items: {},
+      show: false,
       value: false,
     };
+  },
+  onLoad(e) {
+    // 获取其他用户信息
+    TUIUserService.getUserProfile({
+      userIDList: [e.id],
+    })
+      .then(({ data }) => {
+        this.items = data[0];
+      })
+      .catch(function (imError) {
+        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+      });
   },
   methods: {
     change(path, type) {
@@ -72,8 +100,28 @@ export default {
         url: `${path}?type=${type}`,
       });
     },
+    // 聊天
+    service() {
+      console.log(this.items);
+      // TUIConversationService.switchConversation(this.items.conversationID).catch(
+      // () => {
+      // this.$base.show("进入回话失败");
+      // }
+      // );
+      // uni.navigateTo({
+      // url: "/TUIKit/components/TUIChat/index",
+      // });
+    },
     // 删除好友
-    delChange() {},
+    confirm() {
+      // BUG: 无法删除
+      TUIFriendService.checkFriend({
+        userIDList: ["test03"],
+        type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
+      }).then((data) => {
+        console.log(data);
+      });
+    },
   },
 };
 </script>

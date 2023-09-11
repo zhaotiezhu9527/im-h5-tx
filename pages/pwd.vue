@@ -17,12 +17,11 @@
       <view class="wrap">
         <view class="from">
           <u-input
-            type="text"
             placeholder="请输入原密码"
             clearable
             password
             border="none"
-            v-model="userPhone"
+            v-model="oldPwd"
           ></u-input>
           <view class="u-border-bottom"></view>
           <u-input
@@ -30,7 +29,7 @@
             clearable
             password
             border="none"
-            v-model="password"
+            v-model="newPwd"
           ></u-input>
           <view class="u-border-bottom"></view>
           <u-input
@@ -60,41 +59,46 @@
 export default {
   data() {
     return {
-      password: "",
+      oldPwd: "",
       newPassword: "",
-      userPhone: "",
+      newPwd: "",
       loading: false,
     };
   },
   methods: {
     submit() {
-      if (!this.userPhone) {
-        return this.$base.show("请输入账号");
-      } else if (!this.password) {
-        return this.$base.show("请输入密码");
-      } else if (this.password !== this.newPassword) {
+      if (!this.oldPwd) {
+        return this.$base.show("请输入原密码");
+      } else if (!this.newPwd) {
+        return this.$base.show("请输入新密码");
+      } else if (this.newPwd !== this.newPassword) {
         return this.$base.show("密码不一致");
       }
       const DATA_OBJ = {
-        loginPwd: this.password,
-        userName: this.userPhone,
+        newPwd: this.newPwd,
+        oldPwd: this.oldPwd,
       };
       this.loading = true;
       this.$api
-        .user_register(DATA_OBJ)
+        .user_update_pwd(DATA_OBJ)
         .then((res) => {
           if (res.data.code == 0) {
-            uni.setStorage({
-              key: "token",
-              data: res.data.token,
-              success: function () {
-                // uni.setStorageSync('userID','')
-                // uni.setStorageSync('SDKAppID','')
-                // uni.setStorageSync('secretKey','')
-                this.$base.configFn();
-                uni.switchTab({ url: "/" });
-              },
-            });
+            TUIChatEngine.logout()
+              .then(() => {
+                uni.removeStorage({
+                  key: "token",
+                  success: (res) => {
+                    uni.removeStorageSync("userID");
+                    uni.removeStorageSync("SDKAppID");
+                    uni.removeStorageSync("secretKey");
+                    uni.redirectTo({ url: "/pages/login" });
+                    this.$base.show("修改成功，重新登录");
+                  },
+                });
+              })
+              .catch(function (imError) {
+                console.warn("logout error:", imError);
+              });
           }
         })
         .finally(() => {

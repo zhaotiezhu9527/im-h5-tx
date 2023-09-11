@@ -2,10 +2,10 @@
   <view class="page">
     <view class="flex p-14 justify-between">
       <view class="flex items-center">
-        <u-avatar :src="src" size="90"></u-avatar>
+        <u-avatar :src="items.avatar" size="90"></u-avatar>
         <view class="pl-12">
-          <view class="text"> test01 </view>
-          <view class="con"> 账号：123abc </view>
+          <view class="text"> {{ items.nick }} </view>
+          <view class="con"> 账号：{{ items.userID }} </view>
         </view>
       </view>
     </view>
@@ -19,14 +19,14 @@
         ></u-cell>
         <u-cell
           title="昵称"
-          value="test01"
+          :value="items.nick"
           :isLink="true"
           arrow-direction="left"
           @click="change('/pages/name', '昵称')"
         ></u-cell>
         <u-cell title="账号">
           <template #value>
-            <text style="color: #606266">test01</text>
+            <text style="color: #606266">{{ items.userID }}</text>
             <image src="@/static/copy.png" class="copy" mode="widthFix" />
           </template>
         </u-cell>
@@ -75,7 +75,7 @@
         ></u-cell>
       </u-cell-group>
     </view>
-    <view class="row"> 退出登录 </view>
+    <view class="row" @click="logout"> 退出登录 </view>
     <u-datetime-picker
       :show="show"
       v-model="value"
@@ -89,16 +89,47 @@
   </view>
 </template>
 <script>
+import TUIChatEngine, { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
-      src: "https://cdn.uviewui.com/uview/album/1.jpg",
-      text: "test01",
+      items: {},
       show: false,
       value: new Date().getTime(),
     };
   },
+  onShow() {
+    // 获取信息
+    TUIUserService.getUserProfile()
+      .then(({ data }) => {
+        this.items = data;
+      })
+      .catch(function (imError) {
+        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+      });
+  },
   methods: {
+    // 退出登录
+    logout() {
+      this.$api.user_logout().then(() => {
+        TUIChatEngine.logout()
+          .then(() => {
+            uni.removeStorage({
+              key: "token",
+              success: (res) => {
+                uni.removeStorageSync("userID");
+                uni.removeStorageSync("SDKAppID");
+                uni.removeStorageSync("secretKey");
+                uni.redirectTo({ url: "/pages/login" });
+                this.$base.show("退出登录成功！");
+              },
+            });
+          })
+          .catch(function (imError) {
+            console.warn("logout error:", imError);
+          });
+      });
+    },
     change(path, type) {
       uni.navigateTo({
         url: `${path}?type=${type}`,

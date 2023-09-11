@@ -26,7 +26,7 @@
         <u-icon name="search" size="40rpx" color="#8b92a0"></u-icon>
         <text>搜索</text>
       </view>
-      <view class="main">
+      <view class="main" v-if="list.length">
         <u-cell-group>
           <u-cell v-for="(item, index) in list" :key="index">
             <template #title>
@@ -68,20 +68,16 @@
           </u-cell>
         </u-cell-group>
       </view>
+      <u-empty class="pt-40" mode="data" v-else> </u-empty>
     </view>
   </view>
 </template>
 <script>
 import Tooltip from "@/components/Tooltip.vue";
-import TUIChatEngine, {
-  TUIGlobal,
-  TUITranslateService,
+import {
   TUIStore,
   StoreName,
-  TUIFriendService,
-  TUIGroupService,
   TUIConversationService,
-  IGroupModel,
 } from "@tencentcloud/chat-uikit-engine";
 
 export default {

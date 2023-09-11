@@ -25,43 +25,59 @@
           placeholder="请输入账号"
           height="60rpx"
           @custom="clear"
+          @search="search"
         ></u-search>
       </view>
       <view class="user">
-        <text @click="show = true">我的账号：ab231</text>
-        <view @click="show = true" class="img"></view>
+        <text @click="show = true">我的账号：{{ items.nick }}</text>
+        <view @click="show = true" class="img">
+          <uqrcode
+            ref="uqrcode2"
+            canvas-id="qrcode2"
+            :value="path"
+            size="25"
+          ></uqrcode
+        ></view>
       </view>
-      <view class="main">
+      <view class="main" v-if="list.length">
         <u-cell-group>
-          <u-cell>
+          <u-cell v-for="(item, index) in list" :key="index">
             <template #title>
-              <view class="flex items-center item">
+              <view class="flex items-center item" @click="itemChange(item)">
                 <view class="icon">
                   <u--image
                     width="70rpx"
                     height="70rpx"
-                    radius="8rpx"
+                    radius="50%"
                     :showLoading="true"
-                    src="https://cdn.uviewui.com/uview/album/8.jpg"
+                    :src="item.avatar"
                   ></u--image>
                 </view>
-                <text class="span">在线客服1号</text>
+                <text class="span">{{ item.nick }}</text>
               </view>
             </template>
           </u-cell>
         </u-cell-group>
       </view>
+      <u-empty class="pt-40" mode="data" v-else> </u-empty>
     </view>
     <u-transition :show="show">
       <view class="maskCon" @click="show = false">
         <view class="mask">
           <view class="flex items-center">
-            <u-avatar :src="src" size="90"></u-avatar>
+            <u-avatar :src="items.avatar" size="90"></u-avatar>
             <view class="pl-12">
-              <view class="text"> test01 </view>
+              <view class="text"> {{ items.nick }} </view>
             </view>
           </view>
-          <view class="ewm"></view>
+          <view class="ewm">
+            <uqrcode
+              ref="uqrcode"
+              canvas-id="qrcode"
+              :value="path"
+              size="125"
+            ></uqrcode>
+          </view>
           <view class="text">扫一扫上面的二维码图案添加为好友</view>
         </view>
       </view>
@@ -69,31 +85,54 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, {
-  TUIGlobal,
-  TUITranslateService,
-  TUIStore,
-  StoreName,
+import {
+  TUIUserService,
   TUIFriendService,
-  TUIGroupService,
-  TUIConversationService,
-  IGroupModel,
 } from "@tencentcloud/chat-uikit-engine";
 
 export default {
   data() {
     return {
       keyword: "",
+      list: [],
+      path: "",
+      items: {},
       show: false,
-      src: "https://cdn.uviewui.com/uview/album/1.jpg",
     };
   },
-  onShow() {},
-  methods: {
-    clear() {
-      uni.navigateBack({
-        delta: 1,
+  onShow() {
+    // 获取信息
+    TUIUserService.getUserProfile()
+      .then(({ data }) => {
+        this.items = data;
+        this.path = `/pages/info?id=${this.items.userID}`;
+      })
+      .catch(function (imError) {
+        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
       });
+  },
+  methods: {
+    itemChange(item) {
+      uni.navigateTo({
+        url: `/pages/info?id=${item.userID}`,
+      });
+    },
+    search(e) {
+      // 获取其他用户信息
+      TUIUserService.getUserProfile({
+        userIDList: [e],
+      })
+        .then(({ data }) => {
+          this.list = data;
+          console.log(data);
+        })
+        .catch(function (imError) {
+          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+        });
+    },
+    clear() {
+      this.list = [];
+      this.keyword = "";
     },
   },
 };
@@ -109,9 +148,8 @@ export default {
   justify-content: center;
   .img {
     margin-left: 10rpx;
-    border: 1rpx solid #e1e1e1;
-    width: 60rpx;
-    height: 60rpx;
+    width: 50rpx;
+    height: 50rpx;
   }
 }
 .list-cell {
@@ -154,7 +192,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 6rpx;
+    border-radius: 50%;
     &.yellow {
       background-color: #ed9f50;
     }
