@@ -1,5 +1,6 @@
 import { TUIChatKit } from "../TUIKit";
 import { TUILogin } from "@tencentcloud/tui-core";
+import TencentCloudChat from "@tencentcloud/chat";
 //获取用户信息
 //设置缓存内容
 export const storage = (name, value) => {
@@ -112,4 +113,9 @@ export const configFn = (params) => {
     useUploadPlugin: true,
     useProfanityFilterPlugin: false,
   });
+  let options = {
+    SDKAppID: 1600002539, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
+  };
+  let chat = TencentCloudChat.create(options);
+  uni.$chat = chat;
 };

@@ -61,12 +61,11 @@
               </view>
             </template>
           </u-cell>
-          <u-cell>
+          <u-cell v-for="(item, index) in list">
             <template #title>
               <view
                 class="flex items-center item"
                 @click="itemChange(item)"
-                v-for="(item, index) in list"
                 :key="index"
               >
                 <view class="icon">

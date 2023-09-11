@@ -40,7 +40,7 @@
         <u-cell title="个性签名"></u-cell>
       </u-cell-group>
     </view>
-    <view class="px-10 back ul">
+    <view class="px-10 back ul" v-if="relation === 'CheckResult_Type_BothWay'">
       <u-cell-group>
         <u-cell title="黑名单">
           <template #value>
@@ -53,7 +53,14 @@
         </u-cell>
       </u-cell-group>
     </view>
-    <view class="row blue back" @click="service"> 聊天 </view>
+    <view
+      class="row blue back"
+      @click="service"
+      v-if="relation === 'CheckResult_Type_BothWay'"
+    >
+      聊天
+    </view>
+    <view class="row blue back" @click="add" v-else> 添加好友 </view>
     <view class="row back" @click="show = true"> 删除 </view>
     <u-modal
       :show="show"
@@ -68,31 +75,20 @@
   </view>
 </template>
 <script>
+import TUICore, { TUIConstants } from "@tencentcloud/tui-core";
 import TencentCloudChat from "@tencentcloud/chat";
-import {
-  TUIUserService,
-  TUIFriendService,
-  TUIConversationService,
-} from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
       items: {},
+      relation: "",
       show: false,
       value: false,
     };
   },
   onLoad(e) {
     // 获取其他用户信息
-    TUIUserService.getUserProfile({
-      userIDList: [e.id],
-    })
-      .then(({ data }) => {
-        this.items = data[0];
-      })
-      .catch(function (imError) {
-        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
-      });
+    this.dataFn(e.id);
   },
   methods: {
     change(path, type) {
@@ -102,7 +98,18 @@ export default {
     },
     // 聊天
     service() {
-      console.log(this.items);
+      TUICore.callService({
+        serviceName: TUIConstants.TUIConversation.SERVICE.NAME,
+        method: TUIConstants.TUIConversation.SERVICE.METHOD.CREATE_CONVERSATION,
+        params: {
+          data: {
+            name: "isC2C",
+          },
+          userIDList: [this.items.userID],
+        },
+      });
+      // 获取会话列表是否友会话，有则进入会话，无则创建会话
+
       // TUIConversationService.switchConversation(this.items.conversationID).catch(
       // () => {
       // this.$base.show("进入回话失败");
@@ -112,15 +119,87 @@ export default {
       // url: "/TUIKit/components/TUIChat/index",
       // });
     },
+    dataFn(id) {
+      uni.$chat
+        .getUserProfile({
+          userIDList: [id],
+        })
+        .then(({ data }) => {
+          this.items = data[0];
+          console.log(data);
+          this.checkFriendFn();
+        })
+        .catch(function (imError) {
+          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+        });
+    },
+    // 获取好友的关系
+    checkFriendFn() {
+      uni.$chat
+        .checkFriend({
+          userIDList: [this.items.userID],
+          type: TencentCloudChat.TYPES.SNS_CHECK_TYPE_BOTH,
+        })
+        .then((imResponse) => {
+          const { successUserIDList, failureUserIDList } = imResponse.data;
+          // 校验成功的 userIDList
+          successUserIDList.forEach((item) => {
+            const { userID, code, relation } = item; // 此时 code 始终为0
+            this.relation = relation;
+            // 单向校验好友关系时可能的结果有：
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，但无法确定 B 的好友表中是否有 A
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但无法确定 B 的好友表中是否有 A
+            // 双向校验好友关系时可能的结果有：
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，B 的好友表中也没有 A
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但 B 的好友表中没有 A
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_B_WITH_A A 的好友表中没有 B，但 B 的好友表中有 A
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_BOTH_WAY A 的好友表中有 B，B 的好友表中也有 A
+          });
+          // 校验失败的 userIDList
+          failureUserIDList.forEach((item) => {
+            const { userID, code, message } = item;
+            console.log(item);
+          });
+        });
+    },
+    // 添加好友
+    add() {
+      uni.$chat
+        .addFriend({
+          to: this.items.userID,
+          source: "AddSource_Type_Web",
+          // remark: "",
+          groupName: "好友",
+          // wording: "我是" + this.items.nick,
+          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_BOTH,
+        })
+        .then((imResponse) => {
+          // 添加好友的请求发送成功
+          this.dataFn(this.items.userID);
+          const { code } = imResponse.data;
+          if (code === 30539) {
+            this.$base.show("提交成功，等待对方验证！");
+            // 30539 说明 user1 设置了【需要经过自己确认对方才能添加自己为好友】，此时 SDK 会触发 TencentCloudChat.EVENT.FRIEND_APPLICATION_LIST_UPDATED 事件
+          } else if (code === 0) {
+            this.$base.show("添加好友成功！");
+            // 0 说明 user1 设置了【允许任何人添加自己为好友】，此时 SDK 会触发 TencentCloudChat.EVENT.FRIEND_LIST_UPDATED 事件
+          }
+        });
+    },
     // 删除好友
     confirm() {
-      // BUG: 无法删除
-      TUIFriendService.checkFriend({
-        userIDList: ["test03"],
-        type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
-      }).then((data) => {
-        console.log(data);
-      });
+      uni.$chat
+        .deleteFriend({
+          userIDList: [this.items.userID],
+          type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
+        })
+        .then(({ data }) => {
+          if (data.successUserIDList.length) {
+            this.$base.show("删除成功！");
+            this.show = false;
+            this.dataFn(this.items.userID);
+          }
+        });
     },
   },
 };

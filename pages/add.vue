@@ -85,10 +85,7 @@
   </view>
 </template>
 <script>
-import {
-  TUIUserService,
-  TUIFriendService,
-} from "@tencentcloud/chat-uikit-engine";
+import { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 
 export default {
   data() {
@@ -118,13 +115,16 @@ export default {
       });
     },
     search(e) {
+      if (e === this.items.userID) {
+        this.$base.show("不可查询自己！");
+        return false;
+      }
       // 获取其他用户信息
       TUIUserService.getUserProfile({
         userIDList: [e],
       })
         .then(({ data }) => {
           this.list = data;
-          console.log(data);
         })
         .catch(function (imError) {
           console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
