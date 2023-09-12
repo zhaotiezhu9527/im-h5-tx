@@ -27,7 +27,7 @@
       </view>
       <view class="main">
         <u-cell-group>
-          <u-cell>
+          <!-- <u-cell>
             <template #title>
               <view
                 class="flex items-center item"
@@ -43,7 +43,7 @@
                 <text class="span">验证信息</text>
               </view>
             </template>
-          </u-cell>
+          </u-cell> -->
           <u-cell>
             <template #title>
               <view
@@ -110,7 +110,9 @@ export default {
       });
   },
   onTabItemTap() {
-    this.$refs.tooltipRef.showFn();
+    if (this.$refs.tooltipRef) {
+      this.$refs.tooltipRef.showFn();
+    }
   },
   methods: {
     itemChange(item) {
