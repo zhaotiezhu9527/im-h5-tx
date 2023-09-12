@@ -7,6 +7,11 @@ export default {
         this.$base.configFn({
           userID: uni.getStorageSync("userID"),
           userSig: uni.getStorageSync("userSig"),
+          success: () => {
+            setTimeout(() => {
+              this.$isResolve();
+            }, 500);
+          },
         });
       },
     });

@@ -129,19 +129,18 @@ export default {
     // 退出登录
     logout() {
       this.$api.user_logout().then(() => {
+        uni.removeStorage({
+          key: "token",
+          success: (res) => {
+            uni.removeStorageSync("userID");
+            uni.removeStorageSync("SDKAppID");
+            uni.removeStorageSync("secretKey");
+            uni.redirectTo({ url: "/pages/login" });
+            this.$base.show("退出登录成功！");
+          },
+        });
         TUIChatEngine.logout()
-          .then(() => {
-            uni.removeStorage({
-              key: "token",
-              success: (res) => {
-                uni.removeStorageSync("userID");
-                uni.removeStorageSync("SDKAppID");
-                uni.removeStorageSync("secretKey");
-                uni.redirectTo({ url: "/pages/login" });
-                this.$base.show("退出登录成功！");
-              },
-            });
-          })
+          .then(() => {})
           .catch(function (imError) {
             console.warn("logout error:", imError);
           });

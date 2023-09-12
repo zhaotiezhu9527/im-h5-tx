@@ -112,10 +112,12 @@ export const configFn = (params) => {
     userSig: params.userSig,
     useUploadPlugin: true,
     useProfanityFilterPlugin: false,
+  }).then(() => {
+    let options = {
+      SDKAppID: 1600002539, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
+    };
+    let chat = TencentCloudChat.create(options);
+    uni.$chat = chat;
+    if (params.success) params.success();
   });
-  let options = {
-    SDKAppID: 1600002539, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
-  };
-  let chat = TencentCloudChat.create(options);
-  uni.$chat = chat;
 };

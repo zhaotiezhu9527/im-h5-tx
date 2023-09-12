@@ -1,5 +1,5 @@
 .chat {
-  height: calc(100vh - 100rpx);
+  height: calc(100vh - 100rpx - var(--status-bar-height));
   overflow: hidden;
 }
 .TUI-chat-h5 {

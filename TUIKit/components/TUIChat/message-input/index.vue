@@ -131,20 +131,20 @@ const switchAudio = (isAudioShow: boolean) => {
 };
 
 const switchEmojiAndFeature = (funcName: string) => {
-  if (currentFunction.value === 'emoji') {
-    if (funcName === 'emoji') {
+  if (currentFunction.value === "emoji") {
+    if (funcName === "emoji") {
       currentFunction.value = "";
     } else {
       currentFunction.value = funcName;
     }
-    if (funcName === 'more') {
+    if (funcName === "more") {
       nextTick(() => {
         emit("handleToolbarListShow");
       });
     }
-  } else if (currentFunction.value === 'more') {
+  } else if (currentFunction.value === "more") {
     emit("handleToolbarListShow");
-    if (funcName === 'more') {
+    if (funcName === "more") {
       currentFunction.value = "";
     } else {
       nextTick(() => {
@@ -153,7 +153,7 @@ const switchEmojiAndFeature = (funcName: string) => {
     }
   } else {
     currentFunction.value = funcName;
-    if (funcName === 'more') {
+    if (funcName === "more") {
       emit("handleToolbarListShow");
     }
   }

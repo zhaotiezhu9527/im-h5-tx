@@ -20,6 +20,10 @@ Vue.prototype.$base = base;
 App.mpType = "app";
 Vue.use(VueCompositionAPI);
 
+Vue.prototype.$onLaunched = new Promise((resolve) => {
+  Vue.prototype.$isResolve = resolve;
+});
+
 unifyPromiseVue2();
 
 const app = new Vue({

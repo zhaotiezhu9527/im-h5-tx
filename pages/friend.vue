@@ -89,7 +89,6 @@
 <script>
 import Tooltip from "@/components/Tooltip.vue";
 import { TUIFriendService } from "@tencentcloud/chat-uikit-engine";
-
 export default {
   components: {
     Tooltip,
@@ -99,11 +98,12 @@ export default {
       list: [],
     };
   },
-  onShow() {
+  async onLoad() {
+    await this.$onLaunched;
     // 获取好友列表
     TUIFriendService.getFriendList()
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         this.list = res.data;
       })
       .catch((err) => {
