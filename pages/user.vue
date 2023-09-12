@@ -11,12 +11,12 @@
     </view>
     <view class="px-10">
       <u-cell-group>
-        <u-cell
+        <!-- <u-cell
           title="头像"
           @click="change('/pages/avatar')"
           :isLink="true"
           arrow-direction="left"
-        ></u-cell>
+        ></u-cell> -->
         <u-cell
           title="昵称"
           :value="items.nick"
@@ -24,7 +24,7 @@
           arrow-direction="left"
           @click="change('/pages/name', '昵称')"
         ></u-cell>
-        <u-cell title="账号">
+        <u-cell title="账号" @click="copy">
           <template #value>
             <text style="color: #606266">{{ items.userID }}</text>
             <image src="@/static/copy.png" class="copy" mode="widthFix" />
@@ -38,12 +38,12 @@
         ></u-cell>
         <u-cell
           title="性别"
-          value="未知"
+          :value="genderFn()"
           @click="change('/pages/sex')"
           :isLink="true"
           arrow-direction="left"
         ></u-cell>
-        <u-cell
+        <!-- <u-cell
           title="生日"
           @click="show = true"
           :isLink="true"
@@ -60,7 +60,7 @@
           @click="change('/pages/name', '邮箱')"
           :isLink="true"
           arrow-direction="left"
-        ></u-cell>
+        ></u-cell> -->
         <u-cell
           title="修改密码"
           @click="change('/pages/pwd')"
@@ -71,6 +71,7 @@
           title="个性签名"
           @click="change('/pages/name', '个性签名')"
           :isLink="true"
+          :value="items.selfSignature"
           arrow-direction="left"
         ></u-cell>
       </u-cell-group>
@@ -103,12 +104,28 @@ export default {
     TUIUserService.getUserProfile()
       .then(({ data }) => {
         this.items = data;
+        console.log(data);
       })
       .catch(function (imError) {
         console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
       });
   },
   methods: {
+    genderFn() {
+      let name = "";
+      switch (this.items.gender) {
+        case "Gender_Type_Male":
+          name = "男";
+          break;
+        case "Gender_Type_Female":
+          name = "女";
+          break;
+        default:
+          name = "";
+          break;
+      }
+      return name;
+    },
     // 退出登录
     logout() {
       this.$api.user_logout().then(() => {
@@ -130,14 +147,26 @@ export default {
           });
       });
     },
+    // 页面跳转
     change(path, type) {
       uni.navigateTo({
-        url: `${path}?type=${type}`,
+        url: `${path}?type=${type}?id=${this.items.userID}`,
       });
     },
     confirm(e) {
       console.log(uni.$u.timeFormat(e.value, "yyyy-mm-dd"));
       this.show = false;
+    },
+    // 复制
+    copy() {
+      uni.setClipboardData({
+        data: this.items.userID,
+        success: () => {
+          uni.showToast({
+            title: "复制成功",
+          });
+        },
+      });
     },
   },
 };

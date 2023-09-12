@@ -31,11 +31,10 @@
       <view class="main" v-if="list.length">
         <view class="title u-border-bottom">好友</view>
         <u-cell-group>
-          <u-cell>
+          <u-cell v-for="(item, index) in list">
             <template #title>
               <view
                 class="flex items-center item"
-                v-for="(item, index) in list"
                 @click="itemChange(item)"
                 :key="index"
               >

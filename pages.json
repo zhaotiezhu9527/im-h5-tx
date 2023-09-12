@@ -149,6 +149,12 @@
       "style": {
         "navigationBarTitleText": "添加好友"
       }
+    },
+    {
+      "path": "pages/remark",
+      "style": {
+        "navigationBarTitleText": "添加好友"
+      }
     }
   ],
   "tabBar": {

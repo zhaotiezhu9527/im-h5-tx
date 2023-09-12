@@ -30,40 +30,47 @@
         <u-cell-group>
           <u-cell v-for="(item, index) in list" :key="index">
             <template #title>
-              <view
-                class="flex items-start justify-between item"
-                @click="itemChange(item)"
-              >
-                <view class="flex items-center">
-                  <view class="icon">
-                    <u-badge
-                      class="badge"
-                      color="#ffffff"
-                      max="99"
-                      v-if="item.unreadCount"
-                      :value="item.unreadCount"
-                    ></u-badge>
-                    <u--image
-                      width="70rpx"
-                      height="70rpx"
-                      radius="50%"
-                      :showLoading="true"
-                      :src="item.getAvatar()"
-                    ></u--image>
-                  </view>
-                  <view>
-                    <text class="span">
-                      {{ item.getShowName() }}
-                    </text>
-                    <view class="txt">
-                      {{ item.getLastMessage("text") }}
+              <u-swipe-action>
+                <u-swipe-action-item
+                  :options="options"
+                  @click="change($event, item)"
+                >
+                  <view
+                    class="flex items-start justify-between item"
+                    @click="itemChange(item)"
+                  >
+                    <view class="flex items-center">
+                      <view class="icon">
+                        <u-badge
+                          class="badge"
+                          color="#ffffff"
+                          max="99"
+                          v-if="item.unreadCount"
+                          :value="item.unreadCount"
+                        ></u-badge>
+                        <u--image
+                          width="70rpx"
+                          height="70rpx"
+                          radius="50%"
+                          :showLoading="true"
+                          :src="item.getAvatar()"
+                        ></u--image>
+                      </view>
+                      <view>
+                        <text class="span">
+                          {{ item.remark || item.getShowName() }}
+                        </text>
+                        <view class="txt">
+                          {{ item.getLastMessage("text") }}
+                        </view>
+                      </view>
+                    </view>
+                    <view class="time">
+                      {{ item.getLastMessage("time") }}
                     </view>
                   </view>
-                </view>
-                <view class="time">
-                  {{ item.getLastMessage("time") }}
-                </view>
-              </view>
+                </u-swipe-action-item>
+              </u-swipe-action>
             </template>
           </u-cell>
         </u-cell-group>
@@ -86,6 +93,9 @@ export default {
   },
   data() {
     return {
+      options: [
+        { text: "删除", style: { backgroundColor: "red", color: "#ffffff" } },
+      ],
       list: [],
     };
   },
@@ -111,10 +121,17 @@ export default {
         url: "/TUIKit/components/TUIChat/index",
       });
     },
+    //搜索跳转
     routePath(url) {
       uni.navigateTo({
         url,
       });
+    },
+    // 删除会话
+    change(e, item) {
+      if (e.index === 0) {
+        uni.$chat.deleteConversation(item.conversationID);
+      }
     },
   },
 };
@@ -150,7 +167,7 @@ export default {
 }
 .main {
   background-color: $white;
-  padding: 0 20rpx;
+  padding: 0;
 }
 /deep/.u-cell-group__wrapper {
   > .u-line {
@@ -163,10 +180,11 @@ export default {
     font-size: 28rpx !important;
   }
   .u-cell__body {
-    padding: 20rpx 0;
+    padding: 0;
   }
 }
 .item {
+  padding: 20rpx;
   .icon {
     width: 70rpx;
     height: 70rpx;

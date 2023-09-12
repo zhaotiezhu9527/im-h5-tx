@@ -17,7 +17,7 @@
       <view class="flex items-center">
         <u-avatar :src="items.avatar" size="90"></u-avatar>
         <view class="pl-12">
-          <view class="text"> {{ items.nick }} </view>
+          <view class="text"> {{ infos.remark || items.nick }} </view>
           <view class="con"> 账号：{{ items.userID }} </view>
         </view>
       </view>
@@ -25,6 +25,7 @@
     <view class="px-10 back">
       <u-cell-group>
         <u-cell
+          v-if="['CheckResult_Type_BothWay'].includes(relation)"
           title="备注名"
           :isLink="true"
           arrow-direction="left"
@@ -34,18 +35,20 @@
     </view>
     <view class="px-10 back ul">
       <u-cell-group>
-        <u-cell title="生日"></u-cell>
-        <u-cell title="手机"></u-cell>
-        <u-cell title="邮箱"></u-cell>
+        <u-cell title="性别" :value="genderFn()"></u-cell>
         <u-cell title="个性签名"></u-cell>
       </u-cell-group>
     </view>
-    <view class="px-10 back ul" v-if="relation === 'CheckResult_Type_BothWay'">
+    <view
+      class="px-10 back ul"
+      v-if="['CheckResult_Type_BothWay'].includes(relation) || type === 'black'"
+    >
       <u-cell-group>
         <u-cell title="黑名单">
           <template #value>
             <u-switch
               v-model="value"
+              @change="blackChange"
               activeColor="#59be68"
               size="50"
             ></u-switch>
@@ -56,12 +59,26 @@
     <view
       class="row blue back"
       @click="service"
-      v-if="relation === 'CheckResult_Type_BothWay'"
+      v-if="['CheckResult_Type_BothWay'].includes(relation)"
     >
       聊天
     </view>
-    <view class="row blue back" @click="add" v-else> 添加好友 </view>
-    <view class="row back" @click="show = true"> 删除 </view>
+    <view
+      class="row blue back"
+      v-if="
+        ['CheckResult_Type_NoRelation'].includes(relation) && type !== 'black'
+      "
+      @click="add"
+    >
+      添加好友
+    </view>
+    <view
+      class="row back"
+      @click="show = true"
+      v-if="['CheckResult_Type_BothWay'].includes(relation)"
+    >
+      删除
+    </view>
     <u-modal
       :show="show"
       @cancel="show = false"
@@ -81,6 +98,8 @@ export default {
   data() {
     return {
       items: {},
+      infos: {},
+      type: "",
       relation: "",
       show: false,
       value: false,
@@ -89,11 +108,32 @@ export default {
   onLoad(e) {
     // 获取其他用户信息
     this.dataFn(e.id);
+    this.type = e.type;
+  },
+  onShow() {
+    if (this.items.userID) {
+      this.dataFn(this.items.userID);
+    }
   },
   methods: {
+    genderFn() {
+      let name = "";
+      switch (this.items.gender) {
+        case "Gender_Type_Male":
+          name = "男";
+          break;
+        case "Gender_Type_Female":
+          name = "女";
+          break;
+        default:
+          name = "";
+          break;
+      }
+      return name;
+    },
     change(path, type) {
       uni.navigateTo({
-        url: `${path}?type=${type}`,
+        url: `${path}?type=${type}&id=${this.items.userID}`,
       });
     },
     // 聊天
@@ -121,8 +161,23 @@ export default {
         })
         .then(({ data }) => {
           this.items = data[0];
-          console.log(data);
+          this.friendFn(id);
           this.checkFriendFn();
+        })
+        .catch(function (imError) {
+          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+        });
+    },
+    // 获得好友数据
+    friendFn(id) {
+      uni.$chat
+        .getFriendProfile({
+          userIDList: [id],
+        })
+        .then(({ data }) => {
+          if (data.friendList.length) {
+            this.infos = data.friendList[0];
+          }
         })
         .catch(function (imError) {
           console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
@@ -141,45 +196,20 @@ export default {
           successUserIDList.forEach((item) => {
             const { userID, code, relation } = item; // 此时 code 始终为0
             this.relation = relation;
-            // 单向校验好友关系时可能的结果有：
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，但无法确定 B 的好友表中是否有 A
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但无法确定 B 的好友表中是否有 A
-            // 双向校验好友关系时可能的结果有：
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，B 的好友表中也没有 A
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但 B 的好友表中没有 A
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_B_WITH_A A 的好友表中没有 B，但 B 的好友表中有 A
-            // - relation: TencentCloudChat.TYPES.SNS_TYPE_BOTH_WAY A 的好友表中有 B，B 的好友表中也有 A
+            console.log(relation);
+            this.value = relation === "CheckResult_Type_NoRelation";
           });
           // 校验失败的 userIDList
           failureUserIDList.forEach((item) => {
             const { userID, code, message } = item;
-            console.log(item);
           });
         });
     },
     // 添加好友
     add() {
-      uni.$chat
-        .addFriend({
-          to: this.items.userID,
-          source: "AddSource_Type_Web",
-          // remark: "",
-          groupName: "好友",
-          // wording: "我是" + this.items.nick,
-          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_BOTH,
-        })
-        .then((imResponse) => {
-          // 添加好友的请求发送成功
-          this.dataFn(this.items.userID);
-          const { code } = imResponse.data;
-          if (code === 30539) {
-            this.$base.show("提交成功，等待对方验证！");
-            // 30539 说明 user1 设置了【需要经过自己确认对方才能添加自己为好友】，此时 SDK 会触发 TencentCloudChat.EVENT.FRIEND_APPLICATION_LIST_UPDATED 事件
-          } else if (code === 0) {
-            this.$base.show("添加好友成功！");
-            // 0 说明 user1 设置了【允许任何人添加自己为好友】，此时 SDK 会触发 TencentCloudChat.EVENT.FRIEND_LIST_UPDATED 事件
-          }
-        });
+      uni.navigateTo({
+        url: `/pages/remark?id=${this.items.userID}`,
+      });
     },
     // 删除好友
     confirm() {
@@ -191,10 +221,44 @@ export default {
         .then(({ data }) => {
           if (data.successUserIDList.length) {
             this.$base.show("删除成功！");
+            uni.$chat.deleteConversation(`C2C${this.items.userID}`);
             this.show = false;
             this.dataFn(this.items.userID);
           }
         });
+    },
+    blackChange(e) {
+      if (e) {
+        // 移入黑名单
+        uni.$chat
+          .addToBlacklist({ userIDList: [this.items.userID] })
+          .then(({ data }) => {
+            // 删除会话，不删除记录
+            uni.$chat
+              .deleteConversation({
+                conversationIDList: [`C2C${this.items.userID}`],
+                clearHistoryMessage: false,
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            this.type = "black";
+            this.dataFn(this.items.userID);
+          })
+          .catch((data) => {
+            this.value = !this.value;
+          });
+      } else {
+        // 移除黑名单
+        uni.$chat
+          .removeFromBlacklist({ userIDList: [this.items.userID] })
+          .then((data) => {
+            this.type = "";
+          })
+          .catch((data) => {
+            this.value = !this.value;
+          });
+      }
     },
   },
 };

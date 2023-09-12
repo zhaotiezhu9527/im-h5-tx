@@ -37,6 +37,9 @@ export default {
         uni.scanCode({
           success: (res) => {
             console.log(res);
+            uni.navigateTo({
+              url: res,
+            });
           },
         });
       } else {

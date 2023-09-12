@@ -12,26 +12,23 @@
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
     >
-      <template #right>
-        <u-icon name="plus-circle"></u-icon>
-      </template>
     </u-navbar>
     <view class="main">
       <view class="title">你不会收到列表中任何联系人的消息</view>
       <u-cell-group>
-        <u-cell>
+        <u-cell v-for="(item, index) in list" :key="index">
           <template #title>
-            <view class="flex items-center item" @click="itemChange">
+            <view class="flex items-center item" @click="itemChange(item)">
               <view class="icon">
                 <u--image
                   width="70rpx"
                   height="70rpx"
                   radius="8rpx"
                   :showLoading="true"
-                  src="https://cdn.uviewui.com/uview/album/8.jpg"
+                  :src="item.avatar"
                 ></u--image>
               </view>
-              <text class="span">在线客服1号</text>
+              <text class="span">{{ item.nick }}</text>
             </view>
           </template>
         </u-cell>
@@ -40,23 +37,31 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, {
-  TUIGlobal,
-  TUITranslateService,
-  TUIStore,
-  StoreName,
-  TUIFriendService,
-  TUIGroupService,
-  TUIConversationService,
-  IGroupModel,
-} from "@tencentcloud/chat-uikit-engine";
-
 export default {
   data() {
-    return {};
+    return {
+      list: [],
+    };
   },
-  onShow() {},
-  methods: {},
+  onShow() {
+    // 黑名单列表
+    uni.$chat.getBlacklist().then(({ data }) => {
+      uni.$chat
+        .getUserProfile({
+          userIDList: data,
+        })
+        .then((imResponse) => {
+          this.list = imResponse.data;
+        });
+    });
+  },
+  methods: {
+    itemChange(item) {
+      uni.navigateTo({
+        url: `/pages/info?id=${item.userID}&type=black`,
+      });
+    },
+  },
 };
 </script>
 

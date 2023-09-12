@@ -77,7 +77,7 @@
                     :src="item.profile.avatar"
                   ></u--image>
                 </view>
-                <text class="span">{{ item.profile.nick }}</text>
+                <text class="span">{{ item.remark || item.profile.nick }}</text>
               </view>
             </template>
           </u-cell>
@@ -103,6 +103,7 @@ export default {
     // 获取好友列表
     TUIFriendService.getFriendList()
       .then((res) => {
+        console.log(res.data);
         this.list = res.data;
       })
       .catch((err) => {
