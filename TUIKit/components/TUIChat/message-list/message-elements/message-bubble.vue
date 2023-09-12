@@ -88,17 +88,17 @@ const resendMessage = () => {
   justify-content: flex-start;
 }
 .avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 5px;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 10rpx;
 }
 .message-bubble {
   width: 100%;
   display: flex;
-  padding-bottom: 5px;
+  padding-bottom: 10rpx;
 }
 .line-left {
-  border: 1px solid rgba(0, 110, 255, 0.5);
+  border: 1rpx solid rgba(0, 110, 255, 0.5);
 }
 .message-reference-area {
   display: flex;
@@ -106,14 +106,14 @@ const resendMessage = () => {
   border-radius: 0.5rem;
   border-radius: 0.63rem;
   align-self: start;
-  margin-left: 44px;
-  margin-right: 8px;
+  margin-left: 88rpx;
+  margin-right: 16rpx;
   &-show {
     width: 100%;
     display: flex;
     flex-direction: inherit;
     justify-content: center;
-    padding: 6px;
+    padding: 12rpx;
     p {
       font-family: PingFangSC-Regular;
       font-weight: 400;
@@ -121,7 +121,7 @@ const resendMessage = () => {
       color: #999999;
       letter-spacing: 0;
       word-break: keep-all;
-      padding-right: 5px;
+      padding-right: 10rpx;
     }
     span {
       height: 1.25rem;
@@ -137,23 +137,23 @@ const resendMessage = () => {
 .message-replies {
   display: flex;
   align-self: start;
-  margin-left: 44px;
-  margin-right: 8px;
-  padding: 2px;
+  margin-left: 88rpx;
+  margin-right: 16rpx;
+  padding: 4rpx;
   color: #999999;
-  font-size: 10px;
+  font-size: 20rpx;
   i {
-    margin: 4px;
+    margin: 8rpx;
   }
   span {
-    line-height: 20px;
+    line-height: 40rpx;
   }
 }
 .message-reference-area-reverse,
 .message-replies-reverse {
   align-self: end;
-  margin-right: 44px;
-  margin-left: 8px;
+  margin-right: 88rpx;
+  margin-left: 16rpx;
 }
 
 .face-box {
@@ -161,16 +161,16 @@ const resendMessage = () => {
   align-items: center;
 }
 .text-img {
-  width: 20px;
-  height: 20px;
+  width: 40rpx;
+  height: 40rpx;
 }
 .message-audio {
-  padding-left: 10px;
+  padding-left: 20rpx;
   display: flex;
   align-items: center;
   position: relative;
   .icon {
-    margin: 0 4px;
+    margin: 0 8rpx;
   }
   audio {
     width: 0;
@@ -181,7 +181,7 @@ const resendMessage = () => {
   flex-direction: row-reverse;
 }
 .message-area {
-  max-width: calc(100% - 54px);
+  max-width: calc(100% - 108rpx);
   // position: relative;
   display: flex;
   flex-direction: column;
@@ -194,9 +194,9 @@ const resendMessage = () => {
     letter-spacing: 0;
   }
   .reference-content {
-    padding: 12px;
+    padding: 24rpx;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 28rpx;
     color: burlywood;
     letter-spacing: 0;
     word-wrap: break-word;
@@ -226,9 +226,9 @@ const resendMessage = () => {
     }
   }
   .content {
-    padding: 12px;
+    padding: 24rpx;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 28rpx;
     color: #000000;
     letter-spacing: 0;
     word-wrap: break-word;
@@ -236,23 +236,24 @@ const resendMessage = () => {
     width: fit-content;
     &-in {
       background: #fbfbfb;
-      border-radius: 0px 10px 10px 10px;
+      border-radius: 0px 20rpx 20rpx 20rpx;
     }
     &-out {
-      background: #dceafd;
-      border-radius: 10px 0px 10px 10px;
+      background: #59be68;
+      border-radius: 20rpx 0px 20rpx 20rpx;
+      color: #fff;
     }
     &-image {
       padding: 0px;
       background: transparent;
       height: fit-content;
-      border-radius: 10px 0px 10px 10px;
+      border-radius: 20rpx 0px 20rpx 20rpx;
     }
     &-video {
       padding: 0px;
       height: fit-content;
       background: transparent;
-      border-radius: 10px;
+      border-radius: 20rpx;
     }
   }
 }
@@ -260,14 +261,14 @@ const resendMessage = () => {
   align-self: flex-end;
   font-family: PingFangSC-Regular;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 24rpx;
   color: #b6b8ba;
   word-break: keep-all;
 }
 .fail {
-  width: 15px;
-  height: 15px;
-  border-radius: 15px;
+  width: 30rpx;
+  height: 30rpx;
+  border-radius: 30rpx;
   background: red;
   color: #ffffff;
   display: flex;

@@ -72,7 +72,7 @@ const handlePlay = () => {
   max-width: 100%;
   overflow: hidden;
   .icon {
-    margin: 0 7px;
+    margin: 0 14rpx;
   }
 }
 .reserve {

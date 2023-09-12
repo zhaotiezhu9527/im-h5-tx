@@ -1,64 +1,73 @@
 <template>
-  <div class="chat">
-    <div :class="['TUI-chat', !isPC && 'TUI-chat-h5']">
-      <div
-        v-if="!currentConversationID"
-        :class="['TUI-chat-default', !isPC && 'TUI-chat-h5-default']"
-      >
-        <slot></slot>
+  <div>
+    <div class="my-header flex items-center">
+      <div @click="change">
+        <img class="img" src="../../../static/arrow_left.png" />
       </div>
-      <div
-        v-if="currentConversationID"
-        :class="['TUI-chat', !isPC && 'TUI-chat-h5']"
-      >
-        <ChatHeader
-          :class="[
-            'TUI-chat-header',
-            !isPC && 'TUI-chat-H5-header',
-            isUniFrameWork && 'TUI-chat-uniapp-header',
-          ]"
-          @closeChat="closeChat"
-        ></ChatHeader>
-        <MessageList
-          :class="[
-            'TUI-chat-message-list',
-            !isPC && 'TUI-chat-h5-message-list',
-          ]"
-          :isGroup="isGroup"
-          :groupID="groupID"
-          @handleEditor="handleEditor"
+      <div class="name">{{ infos.remark || items.nick }}</div>
+    </div>
+    <div class="my-placeholder"></div>
+    <div class="chat">
+      <div :class="['TUI-chat', !isPC && 'TUI-chat-h5']">
+        <div
+          v-if="!currentConversationID"
+          :class="['TUI-chat-default', !isPC && 'TUI-chat-h5-default']"
         >
-        </MessageList>
-        <MessageInputToolbar
-          v-show="isToolbarShow"
-          :class="[
-            'TUI-chat-message-input-toolbar',
-            !isPC && 'TUI-chat-h5-message-input-toolbar',
-          ]"
-          @insertEmoji="insertEmoji"
-        ></MessageInputToolbar>
-        <MessageInput
-          :class="[
-            'TUI-chat-message-input',
-            !isPC && 'TUI-chat-h5-message-input',
-            isUniFrameWork && 'TUI-chat-uni-message-input',
-            isWeChat && 'TUI-chat-wx-message-input',
-          ]"
-          :isMuted="false"
-          :muteText="TUITranslateService.t('TUIChat.您已被管理员禁言')"
-          :placeholder="TUITranslateService.t('请输入消息')"
-          ref="messageInputRef"
-          @handleToolbarListShow="handleToolbarListShow"
-        ></MessageInput>
-      </div>
-      <!-- 群组管理 -->
-      <div
-        class="group-profile"
-        v-if="isUniFrameWork && isGroup && groupManageExt"
-        @click="handleGroup"
-      >
-        {{ groupManageExt.text }}
-        <!-- 更多 -->
+          <slot></slot>
+        </div>
+        <div
+          v-if="currentConversationID"
+          :class="['TUI-chat', !isPC && 'TUI-chat-h5']"
+        >
+          <ChatHeader
+            :class="[
+              'TUI-chat-header',
+              !isPC && 'TUI-chat-H5-header',
+              isUniFrameWork && 'TUI-chat-uniapp-header',
+            ]"
+            @closeChat="closeChat"
+          ></ChatHeader>
+          <MessageList
+            :class="[
+              'TUI-chat-message-list',
+              !isPC && 'TUI-chat-h5-message-list',
+            ]"
+            :isGroup="isGroup"
+            :groupID="groupID"
+            @handleEditor="handleEditor"
+          >
+          </MessageList>
+          <MessageInputToolbar
+            v-show="isToolbarShow"
+            :class="[
+              'TUI-chat-message-input-toolbar',
+              !isPC && 'TUI-chat-h5-message-input-toolbar',
+            ]"
+            @insertEmoji="insertEmoji"
+          ></MessageInputToolbar>
+          <MessageInput
+            :class="[
+              'TUI-chat-message-input',
+              !isPC && 'TUI-chat-h5-message-input',
+              isUniFrameWork && 'TUI-chat-uni-message-input',
+              isWeChat && 'TUI-chat-wx-message-input',
+            ]"
+            :isMuted="false"
+            :muteText="TUITranslateService.t('TUIChat.您已被管理员禁言')"
+            :placeholder="TUITranslateService.t('请输入消息')"
+            ref="messageInputRef"
+            @handleToolbarListShow="handleToolbarListShow"
+          ></MessageInput>
+        </div>
+        <!-- 群组管理 -->
+        <div
+          class="group-profile"
+          v-if="isUniFrameWork && isGroup && groupManageExt"
+          @click="handleGroup"
+        >
+          {{ groupManageExt.text }}
+          <!-- 更多 -->
+        </div>
       </div>
     </div>
   </div>
@@ -70,10 +79,11 @@ import TUIChatEngine, {
   TUIConversationService,
   TUIStore,
   StoreName,
+  TUIUserService,
   IMessageModel,
   IConversationModel,
 } from "@tencentcloud/chat-uikit-engine";
-import { ref, onUnmounted, defineEmits, computed } from "../../adapter-vue";
+import { ref, onUnmounted, defineEmits, onMounted } from "../../adapter-vue";
 import ChatHeader from "./chat-header/index.vue";
 import MessageList from "./message-list/index.vue";
 import MessageInput from "./message-input/index.vue";
@@ -106,7 +116,36 @@ TUIStore.watch(StoreName.CONV, {
     groupManageExt.value = extList[0];
   },
 });
-
+const items = ref(<any>{});
+const infos = ref(<any>{});
+onMounted(() => {
+  let str = currentConversationID.value;
+  // 获取信息
+  TUIUserService.getUserProfile({
+    userIDList: [str.substring(3)],
+  }).then(({ data }: any) => {
+    if (data.length) {
+      items.value = data[0];
+    }
+    friendFn(str.substring(3));
+  });
+});
+function friendFn(id: string) {
+  uni.$chat
+    .getFriendProfile({
+      userIDList: [id],
+    })
+    .then(({ data }: any) => {
+      if (data.friendList.length) {
+        infos.value = data.friendList[0];
+      }
+    });
+}
+const change = () => {
+  uni.navigateBack({
+    delta: 1,
+  });
+};
 onUnmounted(() => {
   reset();
 });

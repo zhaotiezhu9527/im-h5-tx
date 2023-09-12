@@ -109,20 +109,20 @@ a {
   color: #679ce1;
 }
 .custom {
-  font-size: 14px;
+  font-size: 28rpx;
   h1 {
-    font-size: 14px;
+    font-size: 28rpx;
     color: #000000;
   }
   h1,
   a,
   p {
-    font-size: 14px;
+    font-size: 28rpx;
   }
   .evaluate {
     ul {
       display: flex;
-      padding-top: 10px;
+      padding-top: 20rpx;
     }
   }
   .order {
