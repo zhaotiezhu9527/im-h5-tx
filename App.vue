@@ -10,6 +10,29 @@ export default {
         });
       },
     });
+    this.$api.user_checkSign().then(({ data }) => {
+      if (!data.valid) {
+        uni.removeStorageSync("token");
+        uni.removeStorageSync("userID");
+        uni.removeStorageSync("SDKAppID");
+        uni.removeStorageSync("secretKey");
+        uni.redirectTo({ url: "/pages/login" });
+      }
+    });
+
+    let timeout = 1000 * 60 * 2; // 每隔2分钟检测一次
+    setInterval(() => {
+      // 检测sign是否过期
+      this.$api.user_checkSign().then(({ data }) => {
+        if (!data.valid) {
+          uni.removeStorageSync("token");
+          uni.removeStorageSync("userID");
+          uni.removeStorageSync("SDKAppID");
+          uni.removeStorageSync("secretKey");
+          uni.redirectTo({ url: "/pages/login" });
+        }
+      });
+    }, timeout);
   },
   onShow: function () {
     console.log("App Show");

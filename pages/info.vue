@@ -75,8 +75,8 @@
   </view>
 </template>
 <script>
-import TUICore, { TUIConstants } from "@tencentcloud/tui-core";
 import TencentCloudChat from "@tencentcloud/chat";
+import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
@@ -98,26 +98,21 @@ export default {
     },
     // 聊天
     service() {
-      TUICore.callService({
-        serviceName: TUIConstants.TUIConversation.SERVICE.NAME,
-        method: TUIConstants.TUIConversation.SERVICE.METHOD.CREATE_CONVERSATION,
-        params: {
-          data: {
-            name: "isC2C",
-          },
-          userIDList: [this.items.userID],
-        },
-      });
-      // 获取会话列表是否友会话，有则进入会话，无则创建会话
-
-      // TUIConversationService.switchConversation(this.items.conversationID).catch(
-      // () => {
-      // this.$base.show("进入回话失败");
-      // }
-      // );
-      // uni.navigateTo({
-      // url: "/TUIKit/components/TUIChat/index",
-      // });
+      uni.$chat
+        .getConversationProfile(`C2C${this.items.userID}`)
+        .then(({ data }) => {
+          TUIConversationService.switchConversation(
+            data.conversation.conversationID
+          ).catch(() => {
+            this.$base.show("进入回话失败");
+          });
+          uni.navigateTo({
+            url: "/TUIKit/components/TUIChat/index",
+          });
+        })
+        .catch((err) => {
+          console.warn("打开会话失败", err, err);
+        });
     },
     dataFn(id) {
       uni.$chat

@@ -48,20 +48,20 @@
                       height="70rpx"
                       radius="50%"
                       :showLoading="true"
-                      src="https://cdn.uviewui.com/uview/album/8.jpg"
+                      :src="item.getAvatar()"
                     ></u--image>
                   </view>
                   <view>
                     <text class="span">
-                      {{ item.lastMessage.fromAccount }}
+                      {{ item.getShowName() }}
                     </text>
                     <view class="txt">
-                      {{ item.lastMessage.messageForShow }}
+                      {{ item.getLastMessage("text") }}
                     </view>
                   </view>
                 </view>
                 <view class="time">
-                  {{ $u.timeFrom(item.lastMessage.lastTime, "yyyy年mm月dd日") }}
+                  {{ item.getLastMessage("time") }}
                 </view>
               </view>
             </template>
@@ -93,7 +93,6 @@ export default {
     TUIStore.watch(StoreName.CONV, {
       conversationList: (data) => {
         this.list = data;
-        console.log(this.list);
       },
     });
   },

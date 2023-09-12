@@ -48,13 +48,27 @@ export const user_logout = (data) => {
   });
 };
 
-//退出登录
+// 修改密码
 export const user_update_pwd = (data) => {
   return new Promise((resolve, reject) => {
     base
       .request({
         url: "user/updatePwd",
         method: "post",
+        data: data,
+      })
+      .then((res) => {
+        resolve(res);
+      });
+  });
+};
+
+export const user_checkSign = (data) => {
+  return new Promise((resolve, reject) => {
+    base
+      .request({
+        url: "im-qtapi-test/user/checkSign",
+        method: "get",
         data: data,
       })
       .then((res) => {
