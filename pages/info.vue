@@ -105,8 +105,7 @@ export default {
       value: false,
     };
   },
-  async onLoad(e) {
-    await this.$onLaunched;
+  onLoad(e) {
     // 获取其他用户信息
     this.dataFn(e.id);
     this.type = e.type;

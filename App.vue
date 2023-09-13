@@ -7,9 +7,6 @@ export default {
         this.$base.configFn({
           userID: uni.getStorageSync("userID"),
           userSig: uni.getStorageSync("userSig"),
-          success: () => {
-            this.$isResolve();
-          },
         });
       },
     });

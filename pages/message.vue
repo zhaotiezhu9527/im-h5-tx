@@ -1,13 +1,16 @@
 <template>
-  <view class="pages" @click="$refs.tooltipRef.showFn()">
+  <view class="pages">
     <u-navbar
       placeholder
       :border="false"
       fixed
       bgColor="#f5f4f6"
       safe-area-inset-top
+      rightIcon="plus-circle"
+      @rightClick="rightClick"
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
+      leftText="消息"
     >
       <template #left>
         <view class="title">消息</view>
@@ -18,9 +21,9 @@
         </Tooltip>
       </template>
     </u-navbar>
-    <view class="page">
+    <view class="page" @click="$refs.tooltipRef.showFn()">
       <view
-        class="search flex justify-center"
+        class="search flex justify-center items-center"
         @click="routePath('/pages/search')"
       >
         <u-icon name="search" size="40rpx" color="#8b92a0"></u-icon>
@@ -110,6 +113,11 @@ export default {
     this.$refs.tooltipRef.showFn();
   },
   methods: {
+    rightClick() {
+      if (!this.$refs.tooltipRef.show) {
+        this.$refs.tooltipRef.showFn(true);
+      }
+    },
     // 进入回话
     itemChange(item) {
       TUIConversationService.switchConversation(item.conversationID).catch(
@@ -138,6 +146,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.page {
+  height: 100%;
+}
 .pages {
   height: 100%;
   .title {

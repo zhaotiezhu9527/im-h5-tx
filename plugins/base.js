@@ -108,7 +108,6 @@ export const request = (params) => {
 export const configFn = (params) => {
   // TUIChatKit 初始化
   TUIChatKit.init();
-  // TUICore login
   TUILogin.login({
     userID: params.userID,
     SDKAppID: 1600002539, // Your SDKAppID
@@ -126,11 +125,8 @@ export const configFn = (params) => {
         "tim-profanity-filter-plugin": TIMProfanityFilterPlugin,
       });
       uni.$chat = chat;
-      if (params.success) params.success();
     })
     .catch((err) => {
-      console.log("---------------------------------------------");
       console.log(err);
-      console.log("---------------------------------------------");
     });
 };

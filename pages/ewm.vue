@@ -43,8 +43,7 @@ export default {
       path: "",
     };
   },
-  async onLoad() {
-    await this.$onLaunched;
+  onLoad() {
     // 获取信息
     TUIUserService.getUserProfile()
       .then(({ data }) => {
@@ -71,8 +70,8 @@ export default {
   padding: 30rpx;
   .ewm {
     margin: 40rpx auto;
-    width: 250rpx;
-    height: 250rpx;
+    width: 125px;
+    height: 125px;
     border: 1rpx solid $line-c-0;
   }
   .text {

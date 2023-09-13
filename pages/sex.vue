@@ -11,6 +11,8 @@
       safe-area-inset-top
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
+      rightText="完成"
+      @rightClick="change"
     >
       <template #right>
         <view @click="change" class="config">完成</view>
@@ -58,8 +60,7 @@ export default {
       ],
     };
   },
-  async onLoad(e) {
-    await this.$onLaunched;
+  onLoad(e) {
     // 获取信息
     TUIUserService.getUserProfile()
       .then(({ data }) => {

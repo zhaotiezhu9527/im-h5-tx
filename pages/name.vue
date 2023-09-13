@@ -11,6 +11,8 @@
       safe-area-inset-top
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
+      rightText="完成"
+      @rightClick="change"
     >
       <template #right>
         <view class="config" @click="change">完成</view>
@@ -44,8 +46,7 @@ export default {
       uid: "", // 好友id
     };
   },
-  async onLoad(e) {
-    await this.$onLaunched;
+  onLoad(e) {
     this.content = e.type;
     this.uid = e.id;
     // 获取信息

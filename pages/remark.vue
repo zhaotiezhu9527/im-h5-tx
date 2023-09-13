@@ -11,6 +11,8 @@
       safe-area-inset-top
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
+      rightText="完成"
+      @rightClick="change"
     >
       <template #right>
         <view class="config" @click="change">完成</view>
@@ -53,8 +55,7 @@ export default {
       uid: "",
     };
   },
-  async onLoad(e) {
-    await this.$onLaunched;
+  onLoad(e) {
     this.uid = e.id;
     TUIUserService.getUserProfile()
       .then(({ data }) => {

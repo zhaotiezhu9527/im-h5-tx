@@ -11,6 +11,8 @@
       safe-area-inset-top
       height="100rpx"
       titleStyle="color:#000;font-size:28rpx;"
+      rightText="清空"
+      @rightClick="change"
     >
       <template #right>
         <view class="clear">清空</view>
@@ -42,23 +44,14 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, {
-  TUIGlobal,
-  TUITranslateService,
-  TUIStore,
-  StoreName,
-  TUIFriendService,
-  TUIGroupService,
-  TUIConversationService,
-  IGroupModel,
-} from "@tencentcloud/chat-uikit-engine";
-
 export default {
   data() {
     return {};
   },
   onShow() {},
-  methods: {},
+  methods: {
+    change() {},
+  },
 };
 </script>
 

@@ -1,17 +1,17 @@
 <template>
   <view class="tooltip">
-    <view @click.native.stop="show = true">
+    <view @click="nativeChange">
       <slot></slot>
     </view>
     <u-transition :show="show" mode="fade">
-      <view class="mask" @click.native.stop="show = true">
-        <view class="flex py-6" @click.native.stop="change('you')">
+      <view class="mask">
+        <view class="flex items-center py-6" @click="change($event, 'you')">
           <u-icon size="40" name="man-add" color="#ffffff"></u-icon>
           <text class="pl-4">添加好友</text>
         </view>
         <view
-          class="flex py-6 u-border-top"
-          @click.native.stop="change('scan')"
+          class="flex items-center py-6 u-border-top"
+          @click="change($event, 'scan')"
         >
           <u-icon size="40" name="scan" color="#ffffff"></u-icon>
           <view class="pl-4">扫一扫</view>
@@ -28,23 +28,33 @@ export default {
     };
   },
   methods: {
-    showFn() {
-      this.show = false;
+    nativeChange(e) {
+      e.stopPropagation();
+      this.show = true;
     },
-    change(type) {
-      this.show = false;
+    showFn(bool = false) {
+      this.show = bool;
+    },
+    change(e, type) {
+      e.stopPropagation();
       if (type === "scan") {
         uni.scanCode({
           success: (res) => {
-            console.log(res);
+            // 判断是否是自己，是的话则跳转user,不是则跳转info
             uni.navigateTo({
-              url: res,
+              url: res.result,
             });
+          },
+          complete: () => {
+            this.show = false;
           },
         });
       } else {
         uni.navigateTo({
           url: "/pages/add",
+          success: (res) => {
+            this.show = false;
+          },
         });
       }
     },

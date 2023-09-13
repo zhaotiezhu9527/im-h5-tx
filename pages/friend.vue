@@ -1,5 +1,5 @@
 <template>
-  <view class="pages" @click="$refs.tooltipRef.showFn()">
+  <view class="pages">
     <u-navbar
       placeholder
       :border="false"
@@ -7,8 +7,10 @@
       fixed
       bgColor="#f5f4f6"
       leftIconSize="0"
+      rightIcon="man-add"
       safe-area-inset-top
       height="100rpx"
+      @rightClick="rightClick"
       titleStyle="color:#000;font-size:28rpx;"
     >
       <template #right>
@@ -17,9 +19,9 @@
         </Tooltip>
       </template>
     </u-navbar>
-    <view class="page">
+    <view class="page" @click="$refs.tooltipRef.showFn()">
       <view
-        class="search flex justify-center"
+        class="search flex justify-center items-center"
         @click="routePath('/pages/search')"
       >
         <u-icon name="search" size="40rpx" color="#8b92a0"></u-icon>
@@ -114,6 +116,11 @@ export default {
     }
   },
   methods: {
+    rightClick() {
+      if (!this.$refs.tooltipRef.show) {
+        this.$refs.tooltipRef.showFn(true);
+      }
+    },
     itemChange(item) {
       uni.navigateTo({
         url: `/pages/info?id=${item.userID}`,
@@ -129,6 +136,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.page,
 .pages {
   height: 100%;
 }
