@@ -34,6 +34,7 @@
         </u-cell>
       </u-cell-group>
     </view>
+    <u-empty class="pt-40" mode="data" v-if="!list.length"> </u-empty>
   </view>
 </template>
 <script>
@@ -46,13 +47,15 @@ export default {
   onShow() {
     // 黑名单列表
     uni.$chat.getBlacklist().then(({ data }) => {
-      uni.$chat
-        .getUserProfile({
-          userIDList: data,
-        })
-        .then((imResponse) => {
-          this.list = imResponse.data;
-        });
+      if (data.length) {
+        uni.$chat
+          .getUserProfile({
+            userIDList: data,
+          })
+          .then((imResponse) => {
+            this.list = imResponse.data;
+          });
+      }
     });
   },
   methods: {

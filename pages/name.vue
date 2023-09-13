@@ -44,7 +44,8 @@ export default {
       uid: "", // 好友id
     };
   },
-  onLoad(e) {
+  async onLoad(e) {
+    await this.$onLaunched;
     this.content = e.type;
     this.uid = e.id;
     // 获取信息

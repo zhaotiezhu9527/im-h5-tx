@@ -1,6 +1,9 @@
 import { TUIChatKit } from "../TUIKit";
 import { TUILogin } from "@tencentcloud/tui-core";
 import TencentCloudChat from "@tencentcloud/chat";
+import TIMUploadPlugin from "tim-upload-plugin";
+import TIMProfanityFilterPlugin from "tim-profanity-filter-plugin";
+
 //获取用户信息
 //设置缓存内容
 export const storage = (name, value) => {
@@ -112,12 +115,22 @@ export const configFn = (params) => {
     userSig: params.userSig,
     useUploadPlugin: true,
     useProfanityFilterPlugin: false,
-  }).then(() => {
-    let options = {
-      SDKAppID: 1600002539, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
-    };
-    let chat = TencentCloudChat.create(options);
-    uni.$chat = chat;
-    if (params.success) params.success();
-  });
+  })
+    .then(() => {
+      let options = {
+        SDKAppID: 1600002539, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
+      };
+      let chat = TencentCloudChat.create(options);
+      chat.registerPlugin({ "tim-upload-plugin": TIMUploadPlugin });
+      chat.registerPlugin({
+        "tim-profanity-filter-plugin": TIMProfanityFilterPlugin,
+      });
+      uni.$chat = chat;
+      if (params.success) params.success();
+    })
+    .catch((err) => {
+      console.log("---------------------------------------------");
+      console.log(err);
+      console.log("---------------------------------------------");
+    });
 };

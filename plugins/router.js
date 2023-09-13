@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
   // #ifdef APP-PLUS
   else if (["/pages/login"].includes(to.path) && token) {
     next({
-      path: "/TUIKit/components/TUIConversation/index",
+      path: "/pages/message",
       NAVTYPE: "pushTab",
     });
   }

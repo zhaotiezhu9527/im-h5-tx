@@ -43,7 +43,8 @@ export default {
       path: "",
     };
   },
-  onShow() {
+  async onLoad() {
+    await this.$onLaunched;
     // 获取信息
     TUIUserService.getUserProfile()
       .then(({ data }) => {

@@ -8,9 +8,7 @@ export default {
           userID: uni.getStorageSync("userID"),
           userSig: uni.getStorageSync("userSig"),
           success: () => {
-            setTimeout(() => {
-              this.$isResolve();
-            }, 500);
+            this.$isResolve();
           },
         });
       },

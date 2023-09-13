@@ -98,12 +98,10 @@ export default {
       list: [],
     };
   },
-  async onLoad() {
-    await this.$onLaunched;
+  onShow() {
     // 获取好友列表
     TUIFriendService.getFriendList()
       .then((res) => {
-        console.log(res);
         this.list = res.data;
       })
       .catch((err) => {

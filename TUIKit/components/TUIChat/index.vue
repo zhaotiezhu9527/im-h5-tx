@@ -2,7 +2,7 @@
   <div>
     <div class="my-header flex items-center">
       <div @click="change">
-        <img class="img" src="../../../static/arrow_left.png" />
+        <div class="img"></div>
       </div>
       <div class="name">{{ infos.remark || items.nick }}</div>
     </div>
@@ -90,7 +90,6 @@ import MessageInput from "./message-input/index.vue";
 import MessageInputToolbar from "./message-input-toolbar/index.vue";
 import TUICore, { TUIConstants, ExtensionInfo } from "@tencentcloud/tui-core";
 import { isUniFrameWork } from "../../utils/is-uni";
-
 const emits = defineEmits(["closeChat"]);
 const isPC = ref(TUIGlobal.getPlatform() === "pc");
 const isWeChat = ref(TUIGlobal.getPlatform() === "wechat");

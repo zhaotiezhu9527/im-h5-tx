@@ -58,16 +58,7 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, {
-  TUIGlobal,
-  TUITranslateService,
-  TUIStore,
-  StoreName,
-  TUIFriendService,
-  TUIGroupService,
-  TUIConversationService,
-  IGroupModel,
-} from "@tencentcloud/chat-uikit-engine";
+import { TUIFriendService } from "@tencentcloud/chat-uikit-engine";
 
 export default {
   data() {

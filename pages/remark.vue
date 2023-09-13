@@ -53,7 +53,8 @@ export default {
       uid: "",
     };
   },
-  onLoad(e) {
+  async onLoad(e) {
+    await this.$onLaunched;
     this.uid = e.id;
     TUIUserService.getUserProfile()
       .then(({ data }) => {
