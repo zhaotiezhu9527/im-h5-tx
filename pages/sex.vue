@@ -94,18 +94,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/deep/.uni-input-input {
-  padding: 18rpx 0 !important;
-  font-size: 28rpx;
-}
 /deep/.u-input__content__field-wrapper__field {
   height: auto;
 }
 .wrap {
   background-color: #fff;
   padding: 0 20rpx;
+  font-size: 28rpx;
   .flex {
-    padding: 20rpx 10rpx;
+    font-size: 28rpx;
+    padding: 30rpx 10rpx;
     box-sizing: border-box;
   }
 }

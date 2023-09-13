@@ -5,12 +5,12 @@
     </view>
     <u-transition :show="show" mode="fade">
       <view class="mask">
-        <view class="flex items-center py-6" @click="change($event, 'you')">
+        <view class="flex items-center py-10" @click="change($event, 'you')">
           <u-icon size="40" name="man-add" color="#ffffff"></u-icon>
           <text class="pl-4">添加好友</text>
         </view>
         <view
-          class="flex items-center py-6 u-border-top"
+          class="flex items-center py-10 u-border-top"
           @click="change($event, 'scan')"
         >
           <u-icon size="40" name="scan" color="#ffffff"></u-icon>
@@ -21,6 +21,7 @@
   </view>
 </template>
 <script>
+import TUIChatEngine, { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
@@ -41,9 +42,25 @@ export default {
         uni.scanCode({
           success: (res) => {
             // 判断是否是自己，是的话则跳转user,不是则跳转info
-            uni.navigateTo({
-              url: res.result,
-            });
+            if (!res.result.includes("/pages/info")) {
+              this.$base.show("无效链接");
+              return false;
+            }
+            let all = res.result.split("/");
+            // 获取信息
+            TUIUserService.getUserProfile()
+              .then(({ data }) => {
+                if (all[3] === data.userID) {
+                  uni.switchTab({
+                    url: "/pages/user",
+                  });
+                } else {
+                  this.dataFn(all[3]);
+                }
+              })
+              .catch(function (imError) {
+                console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+              });
           },
           complete: () => {
             this.show = false;
@@ -57,6 +74,24 @@ export default {
           },
         });
       }
+    },
+    dataFn(id) {
+      uni.$chat
+        .getUserProfile({
+          userIDList: [id],
+        })
+        .then(({ data }) => {
+          if (data.length) {
+            uni.navigateTo({
+              url: `/pages/info?id=${data[0].userID}`,
+            });
+          } else {
+            this.$base.show("暂无此用户！");
+          }
+        })
+        .catch(function (imError) {
+          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+        });
     },
   },
 };
@@ -75,7 +110,7 @@ export default {
     background: #4d4b4d;
     view {
       color: $white;
-      font-size: 24rpx;
+      font-size: 28rpx;
     }
     &:before {
       content: "";
@@ -91,6 +126,6 @@ export default {
   }
 }
 /deep/.u-border-top {
-  border-color: #4e4d4e !important;
+  border-color: rgba(#fff, 0.1) !important;
 }
 </style>

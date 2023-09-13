@@ -57,6 +57,12 @@ const home = [
     path: "/pages/remark",
   },
   {
+    path: "/pages/task",
+  },
+  {
+    path: "/pages/about",
+  },
+  {
     path: "/TUIKit/components/TUIChat/index",
   },
   {

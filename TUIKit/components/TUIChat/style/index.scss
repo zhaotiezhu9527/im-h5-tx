@@ -6,16 +6,15 @@
 @import "./color.scss";
 
 .my-header {
-  position: fixed;
+  position: absolute;
   top: var(--status-bar-height);
   padding: 0 26rpx;
   left: 0;
   width: 100%;
   height: 100rpx;
-  background-color: #fff;
+  background-color: #f5f4f6;
   z-index: 99;
   box-sizing: border-box;
-  position: fixed;
   .img {
     height: 15rpx;
     width: 15rpx;

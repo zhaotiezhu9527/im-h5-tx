@@ -52,8 +52,8 @@
                           :value="item.unreadCount"
                         ></u-badge>
                         <u--image
-                          width="70rpx"
-                          height="70rpx"
+                          width="90rpx"
+                          height="90rpx"
                           radius="50%"
                           :showLoading="true"
                           :src="item.getAvatar()"
@@ -197,12 +197,11 @@ export default {
 .item {
   padding: 20rpx;
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 6rpx;
     position: relative;
     .badge {
       position: absolute;
@@ -218,15 +217,17 @@ export default {
     }
   }
   .span {
-    padding-left: 10rpx;
+    font-size: 32rpx;
+    padding-left: 14rpx;
   }
   .txt {
-    padding-left: 10rpx;
-    font-size: 20rpx;
+    padding-left: 14rpx;
+    padding-top: 8rpx;
+    font-size: 26rpx;
     color: $text-c-2;
   }
   .time {
-    font-size: 18rpx;
+    font-size: 24rpx;
     color: $text-c-2;
   }
 }

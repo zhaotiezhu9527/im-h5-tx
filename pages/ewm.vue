@@ -18,7 +18,7 @@
         <view class="flex items-center">
           <u-avatar :src="items.avatar" size="90"></u-avatar>
           <view class="pl-12">
-            <view class="text"> {{ items.nick }} </view>
+            <view class="name"> {{ items.nick }} </view>
           </view>
         </view>
         <view class="ewm">
@@ -48,7 +48,7 @@ export default {
     TUIUserService.getUserProfile()
       .then(({ data }) => {
         this.items = data;
-        this.path = `/pages/info?id=${this.items.userID}`;
+        this.path = `/pages/info/${this.items.userID}`;
       })
       .catch(function (imError) {
         console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
@@ -72,10 +72,12 @@ export default {
     margin: 40rpx auto;
     width: 125px;
     height: 125px;
-    border: 1rpx solid $line-c-0;
+  }
+  .name {
+    font-size: 32rpx;
   }
   .text {
-    font-size: 20rpx;
+    font-size: 28rpx;
     text-align: center;
     color: $text-c-3;
   }

@@ -10,19 +10,8 @@ export default {
         });
       },
     });
-    this.$api.user_checkSign().then(({ data }) => {
-      if (!data.valid) {
-        uni.removeStorageSync("token");
-        uni.removeStorageSync("userID");
-        uni.removeStorageSync("SDKAppID");
-        uni.removeStorageSync("secretKey");
-        uni.redirectTo({ url: "/pages/login" });
-      }
-    });
 
-    let timeout = 1000 * 60 * 2; // 每隔2分钟检测一次
-    setInterval(() => {
-      // 检测sign是否过期
+    const user_checkSign_fn = () => {
       this.$api.user_checkSign().then(({ data }) => {
         if (!data.valid) {
           uni.removeStorageSync("token");
@@ -32,10 +21,18 @@ export default {
           uni.redirectTo({ url: "/pages/login" });
         }
       });
+    };
+
+    user_checkSign_fn();
+    let timeout = 1000 * 60 * 2; // 每隔2分钟检测一次
+    setInterval(() => {
+      // 检测sign是否过期
+      user_checkSign_fn();
     }, timeout);
   },
   onShow: function () {
     console.log("App Show");
+    // totalUnreadMessageCount
   },
   onHide: function () {
     console.log("App Hide");
@@ -57,5 +54,8 @@ page {
   width: 100% !important;
   height: 100% !important;
   overflow: hidden;
+}
+/deep/.u-empty__text {
+  font-size: 30rpx !important;
 }
 </style>

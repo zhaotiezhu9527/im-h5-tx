@@ -116,7 +116,7 @@ export default {
 
 <style scoped lang="scss">
 /deep/.uni-input-input {
-  padding: 18rpx 0 !important;
+  padding: 28rpx 0 !important;
   font-size: 28rpx;
 }
 /deep/.u-input__content__field-wrapper__field {

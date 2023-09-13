@@ -10,12 +10,6 @@
         "navigationBarTitleText": "登录"
       }
     },
-    // {
-    //   "path": "TUIKit/components/TUIConversation/index",
-    //   "style": {
-    //     "navigationBarTitleText": "云通信 IM"
-    //   }
-    // },
     {
       "path": "pages/message",
       "style": {
@@ -31,12 +25,6 @@
         "navigationBarTitleText": "消息"
       }
     },
-    // {
-    //   "path": "TUIKit/components/TUIConversation/index",
-    //   "style": {
-    //     "navigationBarTitleText": "云通信 IM"
-    //   }
-    // },
     {
       "path": "pages/login",
       "style": {
@@ -155,13 +143,26 @@
       "style": {
         "navigationBarTitleText": "添加好友"
       }
+    },
+    {
+      "path": "pages/task",
+      "style": {
+        "navigationBarTitleText": "云任务"
+      }
+    },
+    {
+      "path": "pages/about",
+      "style": {
+        "navigationBarTitleText": "关于我们"
+      }
     }
   ],
   "tabBar": {
     "color": "#c4c8d2",
     "selectedColor": "#59be68",
     "borderStyle": "white",
-    "iconWidth": "18px",
+    "iconWidth": "20px",
+    "fontSize": "12px",
     "list": [
       {
         "pagePath": "pages/message",
@@ -174,6 +175,12 @@
         "selectedIconPath": "static/icon_1.png",
         "iconPath": "static/icon_11.png",
         "text": "通讯录"
+      },
+      {
+        "pagePath": "pages/task",
+        "selectedIconPath": "static/icon_3.png",
+        "iconPath": "static/icon_33.png",
+        "text": "云任务"
       },
       {
         "pagePath": "pages/user",

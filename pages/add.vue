@@ -21,9 +21,9 @@
           clearabled
           v-model="keyword"
           shape="square"
-          searchIconSize="40"
+          searchIconSize="50"
           placeholder="请输入账号"
-          height="60rpx"
+          height="70rpx"
           @custom="clear"
           @search="search"
         ></u-search>
@@ -46,8 +46,8 @@
               <view class="flex items-center item" @click="itemChange(item)">
                 <view class="icon">
                   <u--image
-                    width="70rpx"
-                    height="70rpx"
+                    width="90rpx"
+                    height="90rpx"
                     radius="50%"
                     :showLoading="true"
                     :src="item.avatar"
@@ -67,7 +67,7 @@
           <view class="flex items-center">
             <u-avatar :src="items.avatar" size="90"></u-avatar>
             <view class="pl-12">
-              <view class="text"> {{ items.nick }} </view>
+              <view class="name"> {{ items.nick }} </view>
             </view>
           </view>
           <view class="ewm">
@@ -111,7 +111,7 @@ export default {
   methods: {
     itemChange(item) {
       uni.navigateTo({
-        url: `/pages/info?id=${item.userID}`,
+        url: `/pages/info/${item.userID}`,
       });
     },
     search(e) {
@@ -187,8 +187,8 @@ export default {
 }
 .item {
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -201,7 +201,8 @@ export default {
     }
   }
   .span {
-    padding-left: 10rpx;
+    font-size: 32rpx;
+    padding-left: 14rpx;
   }
 }
 .maskCon {
@@ -224,12 +225,15 @@ export default {
   padding: 30rpx;
   .ewm {
     margin: 40rpx auto;
-    width: 250rpx;
-    height: 250rpx;
-    border: 1rpx solid $line-c-0;
+    width: 125px;
+    height: 125px;
+  }
+  .name {
+    padding-left: 10rpx;
+    font-size: 32rpx;
   }
   .text {
-    font-size: 20rpx;
+    font-size: 28rpx;
     text-align: center;
     color: $text-c-3;
   }

@@ -72,8 +72,8 @@
               >
                 <view class="icon">
                   <u--image
-                    width="70rpx"
-                    height="70rpx"
+                    width="90rpx"
+                    height="90rpx"
                     radius="50%"
                     :showLoading="true"
                     :src="item.profile.avatar"
@@ -144,11 +144,11 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 24rpx;
+  padding: 20rpx 24rpx;
   overflow: hidden;
   color: #323233;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 28rpx;
+  line-height: 48rpx;
   background-color: #fff;
 }
 .search {
@@ -180,8 +180,8 @@ export default {
 }
 .item {
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,7 +194,8 @@ export default {
     }
   }
   .span {
-    padding-left: 10rpx;
+    padding-left: 14rpx;
+    font-size: 32rpx;
   }
 }
 </style>

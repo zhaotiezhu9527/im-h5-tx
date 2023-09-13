@@ -20,10 +20,10 @@
           focus
           v-model="keyword"
           shape="square"
-          searchIconSize="40"
+          searchIconSize="50"
           placeholder="搜索"
           actionText="取消"
-          height="60rpx"
+          height="70rpx"
           @search="search"
           @custom="clear"
         ></u-search>
@@ -40,14 +40,18 @@
               >
                 <view class="icon">
                   <u--image
-                    width="70rpx"
-                    height="70rpx"
+                    width="90rpx"
+                    height="90rpx"
                     radius="8rpx"
                     :showLoading="true"
                     :src="item.profile.avatar"
                   ></u--image>
                 </view>
-                <view class="span" v-html="titleFn(item.profile.nick)"> </view>
+                <view
+                  class="span"
+                  v-html="titleFn(item.remark || item.profile.nick)"
+                >
+                </view>
               </view>
             </template>
           </u-cell>
@@ -93,7 +97,9 @@ export default {
     },
     search(e) {
       let all = JSON.parse(JSON.stringify(this.listAll));
-      this.list = all.filter((item) => item.profile.nick.includes(e));
+      this.list = all.filter(
+        (item) => item.profile.nick.includes(e) || item.remark.includes(e)
+      );
     },
     clear() {
       this.list = [];
@@ -112,15 +118,15 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 24rpx;
+  padding: 20rpx 24rpx;
   overflow: hidden;
   color: #323233;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 28rpx;
+  line-height: 48rpx;
   background-color: #fff;
 }
 .title {
-  font-size: 10rpx;
+  font-size: 28rpx;
   padding: 10rpx 0;
 }
 .search {
@@ -147,15 +153,16 @@ export default {
 }
 .item {
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
   }
   .span {
-    padding-left: 10rpx;
+    font-size: 32rpx;
+    padding-left: 14rpx;
   }
 }
 </style>

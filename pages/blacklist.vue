@@ -21,9 +21,9 @@
             <view class="flex items-center item" @click="itemChange(item)">
               <view class="icon">
                 <u--image
-                  width="70rpx"
-                  height="70rpx"
-                  radius="8rpx"
+                  width="90rpx"
+                  height="90rpx"
+                  radius="50%"
                   :showLoading="true"
                   :src="item.avatar"
                 ></u--image>
@@ -73,11 +73,11 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 24rpx;
+  padding: 20rpx 24rpx;
   overflow: hidden;
   color: #323233;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 28rpx;
+  line-height: 48rpx;
   background-color: #fff;
 }
 .page {
@@ -87,7 +87,7 @@ export default {
 .main {
   padding: 0 20rpx;
   .title {
-    font-size: 18rpx;
+    font-size: 28rpx;
     padding: 10rpx 0;
     color: $text-c-2;
   }
@@ -108,8 +108,8 @@ export default {
 }
 .item {
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -122,7 +122,8 @@ export default {
     }
   }
   .span {
-    padding-left: 10rpx;
+    font-size: 32rpx;
+    padding-left: 14rpx;
   }
 }
 </style>

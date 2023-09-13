@@ -36,7 +36,7 @@
     <view class="px-10 back ul">
       <u-cell-group>
         <u-cell title="性别" :value="genderFn()"></u-cell>
-        <u-cell title="个性签名"></u-cell>
+        <u-cell title="个性签名" :value="items.selfSignature"></u-cell>
       </u-cell-group>
     </view>
     <view

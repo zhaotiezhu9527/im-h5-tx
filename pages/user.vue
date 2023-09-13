@@ -74,6 +74,12 @@
           :value="items.selfSignature"
           arrow-direction="left"
         ></u-cell>
+        <u-cell
+          title="关于我们"
+          @click="change('/pages/about')"
+          :isLink="true"
+          arrow-direction="left"
+        ></u-cell>
       </u-cell-group>
     </view>
     <view class="row" @click="logout"> 退出登录 </view>
@@ -104,7 +110,6 @@ export default {
     TUIUserService.getUserProfile()
       .then(({ data }) => {
         this.items = data;
-        console.log(data);
       })
       .catch(function (imError) {
         console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
@@ -176,22 +181,27 @@ export default {
   padding-top: var(--status-bar-height);
   background: $white;
   .text {
-    font-size: 28rpx;
+    font-size: 32rpx;
     padding-bottom: 10rpx;
   }
   .con {
-    font-size: 24rpx;
+    font-size: 28rpx;
   }
   .row {
     border-top: 10rpx solid #eff0f3;
     color: red;
     text-align: center;
-    padding: 20rpx 0;
+    padding: 24rpx 0;
+    font-size: 30rpx;
   }
   .copy {
     width: 30rpx;
     margin-left: 6rpx;
   }
+}
+/deep/.u-cell__body {
+  padding: 26rpx 30rpx;
+  font-size: 30rpx;
 }
 /deep/.u-cell-group__wrapper {
   > .u-line {

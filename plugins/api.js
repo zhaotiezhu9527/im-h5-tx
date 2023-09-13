@@ -76,3 +76,16 @@ export const user_checkSign = (data) => {
       });
   });
 };
+export const system_config = (data) => {
+  return new Promise((resolve, reject) => {
+    base
+      .request({
+        url: "im-qtapi-test/system/config",
+        method: "get",
+        data: data,
+      })
+      .then((res) => {
+        resolve(res);
+      });
+  });
+};
