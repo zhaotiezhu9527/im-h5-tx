@@ -10,25 +10,6 @@ export default {
         });
       },
     });
-
-    const user_checkSign_fn = () => {
-      this.$api.user_checkSign().then(({ data }) => {
-        if (!data.valid) {
-          uni.removeStorageSync("token");
-          uni.removeStorageSync("userID");
-          uni.removeStorageSync("SDKAppID");
-          uni.removeStorageSync("secretKey");
-          uni.redirectTo({ url: "/pages/login" });
-        }
-      });
-    };
-
-    user_checkSign_fn();
-    let timeout = 1000 * 60 * 2; // 每隔2分钟检测一次
-    setInterval(() => {
-      // 检测sign是否过期
-      user_checkSign_fn();
-    }, timeout);
   },
   onShow: function () {
     console.log("App Show");

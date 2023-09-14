@@ -85,7 +85,7 @@ export default {
         .updateMyProfile({
           nick: this.items.nick,
           avatar: this.items.avatar,
-          gender: this.gender,
+          gender: this.items.gender,
           selfSignature: this.items.selfSignature,
           allowType: this.content,
         })
