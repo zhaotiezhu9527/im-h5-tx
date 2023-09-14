@@ -126,6 +126,7 @@ export const configFn = (params) => {
       });
       uni.$chat = chat;
       uni.$tx = TencentCloudChat;
+      uni.$unreadCount = 0;
 
       setTimeout(() => {
         let onMessageReceived = function (event) {
@@ -186,16 +187,13 @@ export const configFn = (params) => {
         let onFriendApplicationListUpdated = function (event) {
           // unreadCount - 好友申请的未读数
           const { unreadCount } = event.data;
+          uni.$unreadCount = unreadCount;
           TabBarBadgeFn(unreadCount, 1);
         };
         chat.on(
           uni.$tx.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
           onFriendApplicationListUpdated
         );
-
-        // 黑名单更新触发
-        let onBlacklistUpdated = function (event) {};
-        chat.on(uni.$tx.EVENT.BLACKLIST_UPDATED, onBlacklistUpdated);
       }, 500);
     })
     .catch((err) => {
@@ -211,7 +209,8 @@ export const TabBarBadgeFn = (text, index = 0) => {
     });
   } else {
     uni.removeTabBarBadge({
-      index: 0,
+      index,
+      fail: (err) => {},
     });
   }
 };

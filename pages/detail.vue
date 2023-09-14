@@ -65,6 +65,24 @@ export default {
     };
   },
   onLoad(e) {
+    let _that = this;
+    uni.$chat
+      .setFriendApplicationRead()
+      .then(function (imResponse) {
+        // 已读上报成功
+        // 好友申请触发
+        let onFriendApplicationListUpdated = function (event) {
+          // unreadCount - 好友申请的未读数
+          const { unreadCount } = event.data;
+          uni.$unreadCount = unreadCount;
+          _that.$base.TabBarBadgeFn(unreadCount, 1);
+        };
+        uni.$chat.on(
+          uni.$tx.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
+          onFriendApplicationListUpdated
+        );
+      })
+      .catch(function (imError) {});
     this.dataFn(e.id);
   },
   methods: {

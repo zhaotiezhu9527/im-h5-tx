@@ -40,7 +40,7 @@
     >
     <Icon
       :file="loading"
-      class="message-label"
+      class="message-label identifier"
       :width="'15px'"
       :height="'15px'"
       v-if="message.status === 'unSend'"
@@ -278,6 +278,9 @@ function onAvatarClick(item) {
   font-size: 24rpx;
   color: #b6b8ba;
   word-break: keep-all;
+  &.identifier {
+    animation: identifier 0.5s linear infinite;
+  }
 }
 .fail {
   width: 30rpx;
@@ -298,5 +301,15 @@ function onAvatarClick(item) {
   height: 100%;
   left: 0;
   top: 0;
+}
+
+@keyframes identifier {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

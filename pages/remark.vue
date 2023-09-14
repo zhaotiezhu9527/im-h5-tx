@@ -45,8 +45,7 @@
   </view>
 </template>
 <script>
-import TencentCloudChat from "@tencentcloud/chat";
-import TUIChatEngine, { TUIUserService } from "@tencentcloud/chat-uikit-engine";
+import { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
@@ -66,32 +65,39 @@ export default {
       });
   },
   methods: {
-    change() {
-      uni.$chat
-        .addFriend({
-          to: this.uid,
-          source: "AddSource_Type_Web",
-          remark: this.remark,
-          groupName: "好友",
-          wording: this.wording,
-          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_SINGLE, // 单向添加
-        })
-        .then((imResponse) => {
-          // 添加好友的请求发送成功
-          const { code } = imResponse.data;
-          if (code === 30539) {
-            this.$base.show("提交成功，等待对方验证！");
-          } else if (code === 0) {
-            this.$base.show("添加好友成功！");
-            uni.navigateBack({
-              delta: 1,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          // this.$base.show("对方在自己的黑名单中，不允许加好友");
-        });
+    async change() {
+      let { data } = await uni.$chat.getUserProfile({ userIDList: [this.uid] });
+      if (data && data.length) {
+        let that = data[0];
+        let is_ok = uni.$tx.TYPES.ALLOW_TYPE_ALLOW_ANY === that.allowType;
+        // is_ok 为真则为双向添加，否则单向添加
+        uni.$chat
+          .addFriend({
+            to: this.uid,
+            source: "AddSource_Type_Web",
+            remark: this.remark,
+            groupName: "好友",
+            wording: this.wording,
+            type: is_ok
+              ? uni.$tx.TYPES.SNS_ADD_TYPE_BOTH
+              : uni.$tx.TYPES.SNS_ADD_TYPE_SINGLE, // 单向添加
+          })
+          .then((imResponse) => {
+            // 添加好友的请求发送成功
+            const { code } = imResponse.data;
+            if (code === 30539) {
+              this.$base.show("提交成功，等待对方验证！");
+            } else if (code === 0) {
+              this.$base.show("添加好友成功！");
+              uni.navigateBack({
+                delta: 1,
+              });
+            }
+          })
+          .catch((error) => {
+            this.$base.show(error.message);
+          });
+      }
     },
   },
 };

@@ -78,13 +78,7 @@ export default {
   },
   methods: {
     change() {
-      let obj_data = {
-        nick: this.items.nick,
-        avatar: this.items.avatar,
-        gender: this.items.gender,
-        selfSignature: this.items.selfSignature,
-        allowType: this.items.allowType,
-      };
+      let obj_data = {};
       if (this.content === "昵称") {
         obj_data.nick = this.name;
       } else if (this.content === "个性签名") {

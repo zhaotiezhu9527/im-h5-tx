@@ -46,19 +46,27 @@ export default {
   },
   onShow() {
     // 黑名单列表
-    uni.$chat.getBlacklist().then(({ data }) => {
-      if (data.length) {
-        uni.$chat
-          .getUserProfile({
-            userIDList: data,
-          })
-          .then((imResponse) => {
-            this.list = imResponse.data;
-          });
-      }
-    });
+    this.dataFn();
+    // 黑名单更新触发
+    let onBlacklistUpdated = function (event) {
+      this.dataFn();
+    };
+    uni.$chat.on(uni.$tx.EVENT.BLACKLIST_UPDATED, onBlacklistUpdated);
   },
   methods: {
+    dataFn() {
+      uni.$chat.getBlacklist().then(({ data }) => {
+        if (data.length) {
+          uni.$chat
+            .getUserProfile({
+              userIDList: data,
+            })
+            .then((imResponse) => {
+              this.list = imResponse.data;
+            });
+        }
+      });
+    },
     itemChange(item) {
       uni.navigateTo({
         url: `/pages/info?id=${item.userID}&type=black`,

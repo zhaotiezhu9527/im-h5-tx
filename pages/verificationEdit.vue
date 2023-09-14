@@ -83,11 +83,7 @@ export default {
       }
       uni.$chat
         .updateMyProfile({
-          nick: this.items.nick,
-          avatar: this.items.avatar,
-          gender: this.items.gender,
           selfSignature: this.items.selfSignature,
-          allowType: this.content,
         })
         .then(({ data }) => {
           this.$base.show("修改成功！");

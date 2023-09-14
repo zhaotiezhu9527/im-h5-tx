@@ -44,6 +44,7 @@
         @sendMessage="sendMessage"
       ></EmojiPickerDialog>
     </div>
+    <div class="mask" v-if="relation">您的好友已将你删除或拉入黑名单</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -113,15 +114,20 @@ const isApp = ref(TUIGlobal.getPlatform() === "app");
 const isAudioEnable = ref(isWeChat.value || isApp.value);
 const currentFunction = ref<string>("");
 const isGroup = ref<boolean>(false);
+const relation = ref<boolean>(false);
 
 TUIStore.watch(StoreName.CONV, {
   currentConversation: (conversation: typeof IConversationModel) => {
     currentConversation.value = conversation;
     isGroup.value =
       currentConversation?.value?.type === TUIChatEngine.TYPES.CONV_GROUP;
+    dataFn(conversation);
   },
 });
-
+let onFriendListUpdated = function (event: any) {
+  dataFn(currentConversation.value);
+};
+uni.$chat.on(uni.$tx.EVENT.FRIEND_LIST_UPDATED, onFriendListUpdated);
 const switchAudio = (isAudioShow: boolean) => {
   if (isAudioShow) {
     switchEmojiAndFeature("audio");
@@ -129,6 +135,23 @@ const switchAudio = (isAudioShow: boolean) => {
     switchEmojiAndFeature("");
   }
 };
+
+function dataFn(conversation: any) {
+  if (!conversation) return false;
+  let txt = conversation?.conversationID;
+  if (txt) {
+    // 检测好友关系
+    uni.$chat
+      .checkFriend({
+        userIDList: [txt.substring(3)],
+        type: uni.$tx.TYPES.SNS_CHECK_TYPE_BOTH,
+      })
+      .then(({ data }: any) => {
+        let that = data.successUserIDList[0];
+        relation.value = that.relation === uni.$tx.TYPES.SNS_TYPE_NO_RELATION;
+      });
+  }
+}
 
 const switchEmojiAndFeature = (funcName: string) => {
   if (currentFunction.value === "emoji") {
@@ -237,6 +260,19 @@ defineExpose({
   max-width: 100%;
   overflow: hidden;
   background: #ebf0f6;
+  .mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #ebf0f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28rpx;
+    color: $text-c-2;
+  }
   &-editor {
     flex: 1;
     display: flex;

@@ -106,7 +106,6 @@ export default {
     TUIStore.watch(StoreName.CONV, {
       conversationList: (data) => {
         this.list = data;
-        console.log(data);
       },
     });
     setTimeout(() => {
@@ -117,11 +116,20 @@ export default {
           _that.list = data.conversationList;
         });
       };
+      console.log(uni.$chat);
       uni.$chat.on(
         uni.$tx.EVENT.CONVERSATION_LIST_UPDATED,
         onConversationListUpdated
       );
-    }, 500);
+
+      //好友或者自己的资料更新
+      let onProfileUpdated = function (event) {
+        uni.$chat.getConversationList().then(({ data }) => {
+          _that.list = data.conversationList;
+        });
+      };
+      uni.$chat.on(uni.$tx.EVENT.PROFILE_UPDATED, onProfileUpdated);
+    }, 1000);
   },
   onTabItemTap() {
     this.$refs.tooltipRef.showFn();

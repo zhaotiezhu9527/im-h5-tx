@@ -108,16 +108,24 @@ export default {
     };
   },
   onShow() {
-    // 获取信息
-    TUIUserService.getUserProfile()
-      .then(({ data }) => {
-        this.items = data;
-      })
-      .catch(function (imError) {
-        console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
-      });
+    this.dataFn();
+    //好友或者自己的资料更新
+    let onProfileUpdated = function (event) {
+      this.dataFn();
+    };
+    uni.$chat.on(uni.$tx.EVENT.PROFILE_UPDATED, onProfileUpdated);
   },
   methods: {
+    dataFn() {
+      // 获取信息
+      TUIUserService.getUserProfile()
+        .then(({ data }) => {
+          this.items = data;
+        })
+        .catch(function (imError) {
+          console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
+        });
+    },
     verifyFn() {
       let name = "";
       switch (this.items.allowType) {

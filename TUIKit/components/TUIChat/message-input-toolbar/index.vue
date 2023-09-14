@@ -24,8 +24,8 @@
       <FileUpload v-if="!isUniFrameWork"></FileUpload>
       <VideoUpload videoSourceType="album"></VideoUpload>
       <VideoUpload v-if="isUniFrameWork" videoSourceType="camera"></VideoUpload>
-      <Evaluate></Evaluate>
-      <Words></Words>
+      <!-- <Evaluate></Evaluate> -->
+      <!-- <Words></Words> -->
       <template v-if="extensionList[0]">
         <ToolbarItemContainer
           v-for="extension in extensionList"
@@ -129,7 +129,8 @@ const onCallExtensionClicked = (
     });
   } else if (isGroup.value) {
     currentUserSelectorExtension.value = extension;
-    userSelectorRef?.value?.toggleShow &&  userSelectorRef.value.toggleShow(true);
+    userSelectorRef?.value?.toggleShow &&
+      userSelectorRef.value.toggleShow(true);
   }
 };
 
@@ -211,7 +212,8 @@ const dialogCloseInH5 = (dialogDom: any) => {
   &-list {
     display: grid;
     grid-template-columns: repeat(4, 25%);
-    grid-template-rows: repeat(2, 100px);
+    // grid-template-rows: repeat(2, 100px);
+    grid-template-rows: repeat(1, 100px);
   }
 }
 </style>

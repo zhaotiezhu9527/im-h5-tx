@@ -10,7 +10,6 @@
       leftIconSize="30rpx"
       safe-area-inset-top
       height="100rpx"
-      @leftClick="leftClick"
       titleStyle="color:#000;font-size:28rpx;"
     >
     </u-navbar>
@@ -105,12 +104,16 @@ export default {
       show: false,
       value: false,
       message: "", // 消息内容进来的，
-      del: false, // 是否操作了删除，或者拉入黑名单
     };
   },
   onLoad(e) {
     // 获取其他用户信息
     this.dataFn(e.id);
+    //好友或者自己的资料更新
+    let onProfileUpdated = function (event) {
+      this.dataFn(e.id);
+    };
+    uni.$chat.on(uni.$tx.EVENT.PROFILE_UPDATED, onProfileUpdated);
     this.type = e.type;
     this.message = e.message;
   },
@@ -120,17 +123,6 @@ export default {
     }
   },
   methods: {
-    leftClick() {
-      if (this.message && this.del) {
-        uni.navigateBack({
-          delta: 2,
-        });
-      } else {
-        uni.navigateBack({
-          delta: 1,
-        });
-      }
-    },
     genderFn() {
       let name = "";
       switch (this.items.gender) {
@@ -212,7 +204,7 @@ export default {
           successUserIDList.forEach((item) => {
             const { userID, code, relation } = item; // 此时 code 始终为0
             this.relation = relation;
-            console.log(relation);
+            console.log("relation", relation);
             // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，但无法确定 B 的好友表中是否有 A
             // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但无法确定 B 的好友表中是否有 A
 
@@ -240,11 +232,10 @@ export default {
         .then(({ data }) => {
           if (data.successUserIDList.length) {
             this.$base.show("删除成功！");
-            this.del = true;
             // 检测是否有会话，有则删除
             uni.$chat
               .getConversationList([`C2C${this.items.userID}`])
-              .then((data) => {
+              .then(({ data }) => {
                 if (data.conversationList.length) {
                   uni.$chat
                     .deleteConversation(`C2C${this.items.userID}`)
@@ -266,12 +257,11 @@ export default {
           .addToBlacklist({ userIDList: [this.items.userID] })
           .then(({ data }) => {
             // 删除会话，不删除记录
-            this.del = true;
             this.type = "black";
             this.dataFn(this.items.userID);
             uni.$chat
               .getConversationList([`C2C${this.items.userID}`])
-              .then((data) => {
+              .then(({ data }) => {
                 if (data.conversationList.length) {
                   uni.$chat
                     .deleteConversation({

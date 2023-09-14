@@ -6,7 +6,7 @@
 @import "./color.scss";
 
 .my-header {
-  position: absolute;
+  position: fixed;
   top: var(--status-bar-height);
   padding: 0 26rpx;
   left: 0;

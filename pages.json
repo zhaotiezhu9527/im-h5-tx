@@ -36,7 +36,10 @@
     {
       "path": "TUIKit/components/TUIChat/index",
       "style": {
-        "navigationBarTitleText": "云通信 IM"
+        "navigationBarTitleText": "云通信 IM",
+        "app-plus": {
+          "softinputMode": "adjustResize"
+        }
       }
     },
     {
