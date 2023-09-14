@@ -151,22 +151,66 @@ export const configFn = (params) => {
 
         //用户被踢下线时触发
         let onKickedOut = function (event) {
-          console.log(event.data.type);
-          // TencentCloudChat.TYPES.KICKED_OUT_MULT_ACCOUNT(Web端，同一账号，多页面登录被踢)
-          // TencentCloudChat.TYPES.KICKED_OUT_MULT_DEVICE(同一账号，多端登录被踢)
-          // TencentCloudChat.TYPES.KICKED_OUT_USERSIG_EXPIRED(签名过期)
-          // TencentCloudChat.TYPES.KICKED_OUT_REST_API(REST API kick 接口踢出)
+          if (
+            [
+              uni.$tx.TYPES.KICKED_OUT_MULT_ACCOUNT,
+              uni.$tx.TYPES.KICKED_OUT_MULT_DEVICE,
+            ].includes(event.data.type)
+          ) {
+            logoutShowFn("账号异地登录，已退出");
+          } else {
+            logoutShowFn("签名过期");
+          }
         };
         chat.on(TencentCloudChat.EVENT.KICKED_OUT, onKickedOut);
 
         // 网络状态
         let onNetStateChange = function (event) {
-          // event.data.state 当前网络状态，枚举值及说明如下：
-          // TencentCloudChat.TYPES.NET_STATE_CONNECTED - 已接入网络
-          // TencentCloudChat.TYPES.NET_STATE_CONNECTING - 连接中。很可能遇到网络抖动，SDK 在重试。接入侧可根据此状态提示“当前网络不稳定”或“连接中”
-          // TencentCloudChat.TYPES.NET_STATE_DISCONNECTED - 未接入网络。接入侧可根据此状态提示“当前网络不可用”。SDK 仍会继续重试，若用户网络恢复，SDK 会自动同步消息
+          if (
+            event.data.state === TencentCloudChat.TYPES.NET_STATE_CONNECTING
+          ) {
+            uni.showLoading({
+              title: "网络正在连接~",
+            });
+          } else if (
+            event.data.state === TencentCloudChat.TYPES.NET_STATE_DISCONNECTED
+          ) {
+            uni.showLoading({
+              title: "网络已断开~",
+            });
+          } else {
+            uni.hideLoading();
+          }
         };
         chat.on(TencentCloudChat.EVENT.NET_STATE_CHANGE, onNetStateChange);
+
+        // 好友申请触发
+        let onFriendApplicationListUpdated = function (event) {
+          // unreadCount - 好友申请的未读数
+          const { friendApplicationList, unreadCount } = event.data;
+          // TabBarBadgeFn(unreadCount, 1);
+          console.log(unreadCount, ".....");
+          // 发送给我的好友申请（即别人申请加我为好友）
+          const applicationSentToMe = friendApplicationList.filter(
+            (friendApplication) =>
+              friendApplication.type ===
+              TencentCloudChat.TYPES.SNS_APPLICATION_SENT_TO_ME
+          );
+          // 我发送出去的好友申请（即我申请加别人为好友）
+          const applicationSentByMe = friendApplicationList.filter(
+            (friendApplication) =>
+              friendApplication.type ===
+              TencentCloudChat.TYPES.SNS_APPLICATION_SENT_BY_ME
+          );
+        };
+        chat.on(
+          TencentCloudChat.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
+          onFriendApplicationListUpdated
+        );
+
+        // 黑名单更新触发
+        let onBlacklistUpdated = function (event) {};
+        chat.on(TencentCloudChat.EVENT.BLACKLIST_UPDATED, onBlacklistUpdated);
       }, 500);
     })
     .catch((err) => {
@@ -174,15 +218,32 @@ export const configFn = (params) => {
     });
 };
 
-function TabBarBadgeFn(index) {
-  if (index) {
+export const TabBarBadgeFn = (text, index = 0) => {
+  if (text) {
     uni.setTabBarBadge({
-      index: 0,
-      text: index + "",
+      index,
+      text: text + "",
     });
   } else {
     uni.removeTabBarBadge({
       index: 0,
     });
   }
+};
+
+function logoutShowFn(title) {
+  uni.removeStorage({
+    key: "token",
+    success: (res) => {
+      uni.removeStorageSync("userID");
+      uni.removeStorageSync("SDKAppID");
+      uni.removeStorageSync("secretKey");
+      uni.redirectTo({ url: "/pages/login" });
+      uni.showToast({
+        title,
+        duration: 2000,
+        icon: "none",
+      });
+    },
+  });
 }

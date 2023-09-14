@@ -21,7 +21,7 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, { TUIUserService } from "@tencentcloud/chat-uikit-engine";
+import { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
@@ -69,7 +69,7 @@ export default {
       } else {
         uni.navigateTo({
           url: "/pages/add",
-          success: (res) => {
+          complete: (res) => {
             this.show = false;
           },
         });

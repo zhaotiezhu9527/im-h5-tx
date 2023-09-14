@@ -90,7 +90,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          this.$base.show("对方在自己的黑名单中，不允许加好友");
+          // this.$base.show("对方在自己的黑名单中，不允许加好友");
         });
     },
   },

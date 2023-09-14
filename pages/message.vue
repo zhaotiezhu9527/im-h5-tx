@@ -108,6 +108,19 @@ export default {
         this.list = data;
       },
     });
+    setTimeout(() => {
+      // 会话列表更新
+      let onConversationListUpdated = function (event) {
+        uni.$chat.getConversationList((data) => {
+          console.log(data);
+          // this.list = data;
+        });
+      };
+      uni.$chat.on(
+        uni.$tx.EVENT.CONVERSATION_LIST_UPDATED,
+        onConversationListUpdated
+      );
+    }, 500);
   },
   onTabItemTap() {
     this.$refs.tooltipRef.showFn();

@@ -12,6 +12,7 @@
         'https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'
       "
       onerror="this.src='https://web.sdk.qcloud.com/component/TUIKit/assets/avatar_21.png'"
+      @click="onAvatarClick(message)"
     />
     <main class="message-area">
       <label
@@ -81,6 +82,19 @@ watchEffect(() => {
 const resendMessage = () => {
   emits("resendMessage");
 };
+
+function onAvatarClick(item) {
+  console.log(item);
+  if (item.flow === "out") {
+    uni.switchTab({
+      url: "/pages/user",
+    });
+  } else {
+    uni.navigateTo({
+      url: `/pages/info?id=${item.from}&message=message`,
+    });
+  }
+}
 </script>
 <style lang="scss" scoped>
 .reverse {

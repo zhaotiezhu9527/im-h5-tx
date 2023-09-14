@@ -101,14 +101,12 @@ export default {
     };
   },
   onShow() {
-    // 获取好友列表
-    TUIFriendService.getFriendList()
-      .then((res) => {
-        this.list = res.data;
-      })
-      .catch((err) => {
-        console.warn("getFriendList error:", err);
-      });
+    this.dataFn();
+    // 好友列表触发
+    let onFriendListUpdated = (event) => {
+      this.dataFn();
+    };
+    uni.$chat.on(uni.$tx.EVENT.FRIEND_LIST_UPDATED, onFriendListUpdated);
   },
   onTabItemTap() {
     if (this.$refs.tooltipRef) {
@@ -116,6 +114,16 @@ export default {
     }
   },
   methods: {
+    dataFn() {
+      // 获取好友列表
+      TUIFriendService.getFriendList()
+        .then((res) => {
+          this.list = res.data;
+        })
+        .catch((err) => {
+          console.warn("getFriendList error:", err);
+        });
+    },
     rightClick() {
       if (!this.$refs.tooltipRef.show) {
         this.$refs.tooltipRef.showFn(true);

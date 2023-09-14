@@ -10,6 +10,7 @@
       leftIconSize="30rpx"
       safe-area-inset-top
       height="100rpx"
+      @leftClick="leftClick"
       titleStyle="color:#000;font-size:28rpx;"
     >
     </u-navbar>
@@ -103,12 +104,14 @@ export default {
       relation: "",
       show: false,
       value: false,
+      message: "",
     };
   },
   onLoad(e) {
     // 获取其他用户信息
     this.dataFn(e.id);
     this.type = e.type;
+    this.message = e.message;
   },
   onShow() {
     if (this.items.userID) {
@@ -116,6 +119,17 @@ export default {
     }
   },
   methods: {
+    leftClick() {
+      if (this.message) {
+        uni.navigateBack({
+          delta: 2,
+        });
+      } else {
+        uni.navigateBack({
+          delta: 1,
+        });
+      }
+    },
     genderFn() {
       let name = "";
       switch (this.items.gender) {
@@ -219,6 +233,8 @@ export default {
           type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
         })
         .then(({ data }) => {
+          let index = uni.$chat.getTotalUnreadMessageCount();
+          this.$base.TabBarBadgeFn(index);
           if (data.successUserIDList.length) {
             this.$base.show("删除成功！");
             uni.$chat.deleteConversation(`C2C${this.items.userID}`);

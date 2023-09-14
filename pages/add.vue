@@ -102,7 +102,7 @@ export default {
     TUIUserService.getUserProfile()
       .then(({ data }) => {
         this.items = data;
-        this.path = `/pages/info?id=${this.items.userID}`;
+        this.path = `/pages/info/${this.items.userID}`;
       })
       .catch(function (imError) {
         console.warn("getMyProfile error:", imError); // 获取个人资料失败的相关信息
@@ -111,7 +111,7 @@ export default {
   methods: {
     itemChange(item) {
       uni.navigateTo({
-        url: `/pages/info/${item.userID}`,
+        url: `/pages/info?id=${item.userID}`,
       });
     },
     search(e) {
