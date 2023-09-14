@@ -74,7 +74,7 @@ export default {
           remark: this.remark,
           groupName: "好友",
           wording: this.wording,
-          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_BOTH,
+          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_SINGLE, // 单向添加
         })
         .then((imResponse) => {
           // 添加好友的请求发送成功

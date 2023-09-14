@@ -63,6 +63,12 @@ const home = [
     path: "/pages/about",
   },
   {
+    path: "/pages/detail",
+  },
+  {
+    path: "/pages/verificationEdit",
+  },
+  {
     path: "/TUIKit/components/TUIChat/index",
   },
   {

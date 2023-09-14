@@ -155,6 +155,18 @@
       "style": {
         "navigationBarTitleText": "关于我们"
       }
+    },
+    {
+      "path": "pages/detail",
+      "style": {
+        "navigationBarTitleText": "申请验证"
+      }
+    },
+    {
+      "path": "pages/verificationEdit",
+      "style": {
+        "navigationBarTitleText": "验证方式"
+      }
     }
   ],
   "tabBar": {

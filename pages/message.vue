@@ -51,25 +51,25 @@
                           v-if="item.unreadCount"
                           :value="item.unreadCount"
                         ></u-badge>
-                        <u--image
+                        <u-image
                           width="90rpx"
                           height="90rpx"
                           radius="50%"
                           :showLoading="true"
-                          :src="item.getAvatar()"
-                        ></u--image>
+                          :src="item.userProfile.avatar"
+                        ></u-image>
                       </view>
                       <view>
                         <text class="span">
-                          {{ item.remark || item.getShowName() }}
+                          {{ item.remark || item.userProfile.nick }}
                         </text>
                         <view class="txt">
-                          {{ item.getLastMessage("text") }}
+                          {{ item.lastMessage.messageForShow }}
                         </view>
                       </view>
                     </view>
                     <view class="time">
-                      {{ item.getLastMessage("time") }}
+                      {{ $u.timeFrom(item.lastMessage.lastTime, "yyyy-mm-dd") }}
                     </view>
                   </view>
                 </u-swipe-action-item>
@@ -106,14 +106,15 @@ export default {
     TUIStore.watch(StoreName.CONV, {
       conversationList: (data) => {
         this.list = data;
+        console.log(data);
       },
     });
     setTimeout(() => {
       // 会话列表更新
+      let _that = this;
       let onConversationListUpdated = function (event) {
-        uni.$chat.getConversationList((data) => {
-          console.log(data);
-          // this.list = data;
+        uni.$chat.getConversationList().then(({ data }) => {
+          _that.list = data.conversationList;
         });
       };
       uni.$chat.on(

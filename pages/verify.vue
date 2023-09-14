@@ -20,37 +20,85 @@
     </u-navbar>
     <view class="main">
       <u-cell-group>
-        <u-cell>
+        <u-cell v-for="(item, index) in list" :key="index">
           <template #title>
-            <view class="flex items-center item" @click="itemChange">
+            <view class="flex items-center item" @click="itemChange(item)">
               <view class="icon">
-                <u--image
-                  width="70rpx"
-                  height="70rpx"
-                  radius="8rpx"
+                <u-image
+                  width="90rpx"
+                  height="90rpx"
+                  radius="50%"
                   :showLoading="true"
-                  src="https://cdn.uviewui.com/uview/album/8.jpg"
-                ></u--image>
+                  :src="item.avatar"
+                ></u-image>
               </view>
-              <text class="span">在线客服1号</text>
+              <text class="span">{{ item.nick }}</text>
             </view>
           </template>
           <template #value>
-            <u-button class="btn" color="#59be68" size="small"> 通过 </u-button>
+            <view class="text-c-2">
+              {{ $u.timeFrom(item.time, "yyyy-mm-dd") }}
+            </view>
           </template>
         </u-cell>
       </u-cell-group>
     </view>
+    <u-empty class="pt-40" mode="data" v-if="!list.length"> </u-empty>
   </view>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      list: [],
+    };
   },
-  onShow() {},
+  onShow() {
+    // 获取好友申请列表
+    this.dataFn();
+    let _that = this;
+    // 好友申请触发
+    let onFriendApplicationListUpdated = function (event) {
+      const { friendApplicationList } = event.data;
+      _that.list = friendApplicationList;
+    };
+
+    uni.$chat.on(
+      uni.$tx.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
+      onFriendApplicationListUpdated
+    );
+  },
   methods: {
-    change() {},
+    dataFn() {
+      uni.$chat.getFriendApplicationList().then(({ data }) => {
+        this.list = data.friendApplicationList;
+        console.log(this.list);
+      });
+    },
+    // 清空
+    change() {
+      let len = 0;
+      if (!this.list.length) return false;
+      this.list.forEach((item, index) => {
+        uni.$chat
+          .deleteFriendApplication({
+            userID: item.userID,
+            type: item.type,
+          })
+          .then(() => {
+            len++;
+            if (len === index) {
+              this.dataFn();
+            }
+          });
+      });
+    },
+    // 申请验证详情
+    itemChange(item) {
+      uni.navigateTo({
+        url: `/pages/detail?id=${item.userID}`,
+      });
+    },
   },
 };
 </script>
@@ -60,11 +108,11 @@ export default {
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 24rpx;
+  padding: 20rpx 24rpx;
   overflow: hidden;
   color: #323233;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 28rpx;
+  line-height: 48rpx;
   background-color: #fff;
 }
 .page {
@@ -93,8 +141,8 @@ export default {
 }
 .item {
   .icon {
-    width: 70rpx;
-    height: 70rpx;
+    width: 90rpx;
+    height: 90rpx;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -107,7 +155,8 @@ export default {
     }
   }
   .span {
-    padding-left: 10rpx;
+    padding-left: 14rpx;
+    font-size: 32rpx;
   }
 }
 .btn {

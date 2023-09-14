@@ -60,7 +60,7 @@
     <view
       class="row blue back"
       @click="service"
-      v-if="['CheckResult_Type_BothWay'].includes(relation)"
+      v-if="['CheckResult_Type_BothWay'].includes(relation) && !message"
     >
       聊天
     </view>
@@ -104,7 +104,8 @@ export default {
       relation: "",
       show: false,
       value: false,
-      message: "",
+      message: "", // 消息内容进来的，
+      del: false, // 是否操作了删除，或者拉入黑名单
     };
   },
   onLoad(e) {
@@ -120,7 +121,7 @@ export default {
   },
   methods: {
     leftClick() {
-      if (this.message) {
+      if (this.message && this.del) {
         uni.navigateBack({
           delta: 2,
         });
@@ -199,10 +200,11 @@ export default {
     },
     // 获取好友的关系
     checkFriendFn() {
+      // 双向校验
       uni.$chat
         .checkFriend({
           userIDList: [this.items.userID],
-          type: TencentCloudChat.TYPES.SNS_CHECK_TYPE_BOTH,
+          type: uni.$tx.TYPES.SNS_CHECK_TYPE_BOTH,
         })
         .then((imResponse) => {
           const { successUserIDList, failureUserIDList } = imResponse.data;
@@ -211,7 +213,10 @@ export default {
             const { userID, code, relation } = item; // 此时 code 始终为0
             this.relation = relation;
             console.log(relation);
-            this.value = relation === "CheckResult_Type_NoRelation";
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_NO_RELATION A 的好友表中没有 B，但无法确定 B 的好友表中是否有 A
+            // - relation: TencentCloudChat.TYPES.SNS_TYPE_A_WITH_B A 的好友表中有 B，但无法确定 B 的好友表中是否有 A
+
+            this.value = relation === uni.$tx.TYPES.SNS_TYPE_NO_RELATION;
           });
           // 校验失败的 userIDList
           failureUserIDList.forEach((item) => {
@@ -233,11 +238,22 @@ export default {
           type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
         })
         .then(({ data }) => {
-          let index = uni.$chat.getTotalUnreadMessageCount();
-          this.$base.TabBarBadgeFn(index);
           if (data.successUserIDList.length) {
             this.$base.show("删除成功！");
-            uni.$chat.deleteConversation(`C2C${this.items.userID}`);
+            this.del = true;
+            // 检测是否有会话，有则删除
+            uni.$chat
+              .getConversationList([`C2C${this.items.userID}`])
+              .then((data) => {
+                if (data.conversationList.length) {
+                  uni.$chat
+                    .deleteConversation(`C2C${this.items.userID}`)
+                    .then(() => {
+                      let index = uni.$chat.getTotalUnreadMessageCount();
+                      this.$base.TabBarBadgeFn(index);
+                    });
+                }
+              });
             this.show = false;
             this.dataFn(this.items.userID);
           }
@@ -250,16 +266,27 @@ export default {
           .addToBlacklist({ userIDList: [this.items.userID] })
           .then(({ data }) => {
             // 删除会话，不删除记录
-            uni.$chat
-              .deleteConversation({
-                conversationIDList: [`C2C${this.items.userID}`],
-                clearHistoryMessage: false,
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            this.del = true;
             this.type = "black";
             this.dataFn(this.items.userID);
+            uni.$chat
+              .getConversationList([`C2C${this.items.userID}`])
+              .then((data) => {
+                if (data.conversationList.length) {
+                  uni.$chat
+                    .deleteConversation({
+                      conversationIDList: [`C2C${this.items.userID}`],
+                      clearHistoryMessage: false,
+                    })
+                    .then(() => {
+                      let index = uni.$chat.getTotalUnreadMessageCount();
+                      this.$base.TabBarBadgeFn(index);
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              });
           })
           .catch((data) => {
             this.value = !this.value;
@@ -270,11 +297,26 @@ export default {
           .removeFromBlacklist({ userIDList: [this.items.userID] })
           .then((data) => {
             this.type = "";
+            this.addFriend();
           })
           .catch((data) => {
             this.value = !this.value;
           });
       }
+    },
+    // 移除黑名单默认添加一次好友，（无感添加）
+    addFriend() {
+      uni.$chat
+        .addFriend({
+          to: this.items.userID,
+          source: "AddSource_Type_Web",
+          remark: this.items.remark,
+          groupName: "好友",
+          type: TencentCloudChat.TYPES.SNS_ADD_TYPE_BOTH, // 双向添加
+        })
+        .then((data) => {
+          this.dataFn(this.items.userID);
+        });
     },
   },
 };

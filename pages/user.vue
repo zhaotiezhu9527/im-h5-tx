@@ -43,6 +43,13 @@
           :isLink="true"
           arrow-direction="left"
         ></u-cell>
+        <u-cell
+          title="验证方式"
+          @click="change('/pages/verificationEdit')"
+          :isLink="true"
+          :value="verifyFn()"
+          arrow-direction="left"
+        ></u-cell>
         <!-- <u-cell
           title="生日"
           @click="show = true"
@@ -74,14 +81,9 @@
           :value="items.selfSignature"
           arrow-direction="left"
         ></u-cell>
-        <u-cell
-          title="关于我们"
-          @click="change('/pages/about')"
-          :isLink="true"
-          arrow-direction="left"
-        ></u-cell>
       </u-cell-group>
     </view>
+    <view class="blue-c row" @click="change('/pages/about')"> 关于我们 </view>
     <view class="row" @click="logout"> 退出登录 </view>
     <u-datetime-picker
       :show="show"
@@ -116,6 +118,21 @@ export default {
       });
   },
   methods: {
+    verifyFn() {
+      let name = "";
+      switch (this.items.allowType) {
+        case uni.$tx.TYPES.ALLOW_TYPE_ALLOW_ANY:
+          name = "允许直接加为好友";
+          break;
+        case uni.$tx.TYPES.ALLOW_TYPE_NEED_CONFIRM:
+          name = "需要验证";
+          break;
+        default:
+          name = "拒绝";
+          break;
+      }
+      return name;
+    },
     genderFn() {
       let name = "";
       switch (this.items.gender) {
@@ -193,6 +210,9 @@ export default {
     text-align: center;
     padding: 24rpx 0;
     font-size: 30rpx;
+    &.blue-c {
+      color: #449beb;
+    }
   }
   .copy {
     width: 30rpx;

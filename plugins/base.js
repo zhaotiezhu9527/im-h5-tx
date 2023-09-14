@@ -147,7 +147,7 @@ export const configFn = (params) => {
         );
         // 好友或者自己的数据变更
         let onProfileUpdated = function (event) {};
-        chat.on(TencentCloudChat.EVENT.PROFILE_UPDATED, onProfileUpdated);
+        chat.on(uni.$tx.EVENT.PROFILE_UPDATED, onProfileUpdated);
 
         //用户被踢下线时触发
         let onKickedOut = function (event) {
@@ -162,18 +162,16 @@ export const configFn = (params) => {
             logoutShowFn("签名过期");
           }
         };
-        chat.on(TencentCloudChat.EVENT.KICKED_OUT, onKickedOut);
+        chat.on(uni.$tx.EVENT.KICKED_OUT, onKickedOut);
 
         // 网络状态
         let onNetStateChange = function (event) {
-          if (
-            event.data.state === TencentCloudChat.TYPES.NET_STATE_CONNECTING
-          ) {
+          if (event.data.state === uni.$tx.TYPES.NET_STATE_CONNECTING) {
             uni.showLoading({
               title: "网络正在连接~",
             });
           } else if (
-            event.data.state === TencentCloudChat.TYPES.NET_STATE_DISCONNECTED
+            event.data.state === uni.$tx.TYPES.NET_STATE_DISCONNECTED
           ) {
             uni.showLoading({
               title: "网络已断开~",
@@ -182,35 +180,22 @@ export const configFn = (params) => {
             uni.hideLoading();
           }
         };
-        chat.on(TencentCloudChat.EVENT.NET_STATE_CHANGE, onNetStateChange);
+        chat.on(uni.$tx.EVENT.NET_STATE_CHANGE, onNetStateChange);
 
         // 好友申请触发
         let onFriendApplicationListUpdated = function (event) {
           // unreadCount - 好友申请的未读数
-          const { friendApplicationList, unreadCount } = event.data;
-          // TabBarBadgeFn(unreadCount, 1);
-          console.log(unreadCount, ".....");
-          // 发送给我的好友申请（即别人申请加我为好友）
-          const applicationSentToMe = friendApplicationList.filter(
-            (friendApplication) =>
-              friendApplication.type ===
-              TencentCloudChat.TYPES.SNS_APPLICATION_SENT_TO_ME
-          );
-          // 我发送出去的好友申请（即我申请加别人为好友）
-          const applicationSentByMe = friendApplicationList.filter(
-            (friendApplication) =>
-              friendApplication.type ===
-              TencentCloudChat.TYPES.SNS_APPLICATION_SENT_BY_ME
-          );
+          const { unreadCount } = event.data;
+          TabBarBadgeFn(unreadCount, 1);
         };
         chat.on(
-          TencentCloudChat.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
+          uni.$tx.EVENT.FRIEND_APPLICATION_LIST_UPDATED,
           onFriendApplicationListUpdated
         );
 
         // 黑名单更新触发
         let onBlacklistUpdated = function (event) {};
-        chat.on(TencentCloudChat.EVENT.BLACKLIST_UPDATED, onBlacklistUpdated);
+        chat.on(uni.$tx.EVENT.BLACKLIST_UPDATED, onBlacklistUpdated);
       }, 500);
     })
     .catch((err) => {

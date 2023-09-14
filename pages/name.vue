@@ -35,7 +35,7 @@
   </view>
 </template>
 <script>
-import TUIChatEngine, { TUIUserService } from "@tencentcloud/chat-uikit-engine";
+import { TUIUserService } from "@tencentcloud/chat-uikit-engine";
 export default {
   data() {
     return {
