@@ -28,7 +28,11 @@
         <text>搜索</text>
       </view>
       <view class="back">
-        <u-index-list :index-list="indexList" activeColor="#59be68">
+        <u-index-list
+          :index-list="indexList"
+          activeColor="#59be68"
+          :sticky="false"
+        >
           <view class="main">
             <u-cell-group>
               <u-cell>
@@ -76,6 +80,7 @@
               :text="indexList[index]"
               bgColor="#edeced"
               color="#8c8b8d"
+              size="28"
               height="40"
             ></u-index-anchor>
             <!-- #endif -->
@@ -86,6 +91,7 @@
                 bgColor="#edeced"
                 color="#8c8b8d"
                 height="40"
+                size="28"
               ></u-index-anchor>
               <!-- #endif -->
               <view
@@ -94,13 +100,11 @@
                 @click="itemChange(item)"
               >
                 <view class="icon">
-                  <u--image
-                    width="90rpx"
-                    height="90rpx"
-                    radius="50%"
-                    :showLoading="true"
+                  <image
+                    class="avatar"
+                    mode="widthFix"
                     :src="item.profile.avatar"
-                  ></u--image>
+                  ></image>
                 </view>
                 <text class="span">{{ item.remark || item.profile.nick }}</text>
               </view>
@@ -176,19 +180,7 @@ export default {
           this.list.forEach((item) => {
             let index = this.indexList.findIndex((e) => e === item.en);
             if (!this.itemArr[index]) {
-              this.itemArr[index] = [
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-                item,
-              ];
+              this.itemArr[index] = [item];
             } else {
               this.itemArr[index].push(item);
             }
@@ -278,6 +270,11 @@ export default {
   height: 100%;
 }
 .item {
+  .avatar {
+    width: 90rpx;
+    height: 90rpx;
+    border-radius: 50%;
+  }
   .icon {
     width: 90rpx;
     height: 90rpx;
@@ -297,15 +294,26 @@ export default {
     font-size: 32rpx;
   }
 }
-// /deep/.u-index-list__letter {
-//   top: 50% !important;
-//   transform: translateY(-50%);
-// }
+/deep/.u-index-list__letter {
+  top: 50% !important;
+  transform: translateY(-50%);
+  .u-index-list__letter__item__index {
+    font-size: 28rpx;
+  }
+}
+/deep/.u-fade-enter-active {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
 /deep/.u-index-list {
-  height: calc(100% - 40px - 100rpx - var(--status-bar-height));
+  height: calc(100% - 50px - 100rpx - var(--status-bar-height));
   uni-scroll-view {
     height: 100% !important;
     max-height: 100% !important;
+  }
+  .u-index-anchor {
+    position: relative;
+    top: none;
   }
 }
 </style>
