@@ -22,7 +22,7 @@
         </view>
       </view>
     </view>
-    <view class="px-10 back">
+    <view class="back">
       <u-cell-group>
         <u-cell
           v-if="['CheckResult_Type_BothWay'].includes(relation)"
@@ -33,14 +33,14 @@
         ></u-cell>
       </u-cell-group>
     </view>
-    <view class="px-10 back ul">
+    <view class="back ul">
       <u-cell-group>
         <u-cell title="性别" :value="genderFn()"></u-cell>
         <u-cell title="个性签名" :value="items.selfSignature"></u-cell>
       </u-cell-group>
     </view>
     <view
-      class="px-10 back ul"
+      class="back ul"
       v-if="['CheckResult_Type_BothWay'].includes(relation) || type === 'black'"
     >
       <u-cell-group>
@@ -318,11 +318,11 @@ export default {
     background-color: $white;
   }
   .text {
-    font-size: 28rpx;
+    font-size: 32rpx;
     padding-bottom: 10rpx;
   }
   .con {
-    font-size: 24rpx;
+    font-size: 28rpx;
   }
   .ul {
     border-top: 10rpx solid #eff0f3;
@@ -331,7 +331,8 @@ export default {
     border-top: 10rpx solid #eff0f3;
     color: red;
     text-align: center;
-    padding: 20rpx 0;
+    padding: 24rpx 0;
+    font-size: 30rpx;
     &.blue {
       color: #007aff;
     }
@@ -340,6 +341,11 @@ export default {
     width: 30rpx;
     margin-left: 6rpx;
   }
+}
+
+/deep/.u-cell__body {
+  padding: 26rpx 30rpx;
+  font-size: 30rpx;
 }
 /deep/.u-cell-group__wrapper {
   > .u-line {

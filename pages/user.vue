@@ -9,7 +9,7 @@
         </view>
       </view>
     </view>
-    <view class="px-10">
+    <view>
       <u-cell-group>
         <!-- <u-cell
           title="头像"
